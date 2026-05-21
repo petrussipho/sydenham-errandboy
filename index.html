@@ -7,474 +7,209 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --orange: #F4712E;
-    --orange-dark: #C95420;
-    --orange-light: #FDE8D8;
-    --green: #2DAA6C;
-    --green-dark: #1D7A4C;
-    --green-light: #D4F0E3;
-    --yellow: #F7C732;
-    --dark: #1A1208;
-    --text: #2C1F0E;
-    --muted: #7A6552;
-    --surface: #FFFDF9;
-    --surface2: #F5F0E8;
-    --border: #E8DDD0;
-    --white: #FFFFFF;
-    --red: #E23B3B;
-    --red-light: #FCEAEA;
-    --radius: 16px;
-    --radius-sm: 10px;
+    --orange:#F4712E;--orange-dark:#C95420;--orange-light:#FDE8D8;
+    --green:#2DAA6C;--green-dark:#1D7A4C;--green-light:#D4F0E3;
+    --yellow:#F7C732;--dark:#1A1208;--text:#2C1F0E;--muted:#7A6552;
+    --surface:#FFFDF9;--surface2:#F5F0E8;--border:#E8DDD0;
+    --white:#FFFFFF;--red:#E23B3B;--red-light:#FCEAEA;
+    --radius:16px;--radius-sm:10px;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--text); }
-  body { min-height: 100vh; overflow-x: hidden; }
-
-  /* HEADER */
-  header {
-    background: var(--dark);
-    padding: 18px 20px 14px;
-    display: flex; align-items: center; gap: 12px;
-    position: sticky; top: 0; z-index: 100;
-  }
-  header .logo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800; font-size: 18px;
-    color: var(--white); line-height: 1;
-  }
-  header .logo span { color: var(--orange); }
-  header .badge {
-    background: var(--orange); color: white;
-    font-size: 10px; font-weight: 600;
-    padding: 3px 8px; border-radius: 20px;
-    letter-spacing: 0.5px;
-  }
-  header .track-btn {
-    margin-left: auto;
-    background: transparent; border: 1.5px solid rgba(255,255,255,0.25);
-    color: white; padding: 6px 14px; border-radius: 20px;
-    font-size: 12px; font-family: 'DM Sans', sans-serif;
-    cursor: pointer; transition: all 0.2s;
-  }
-  header .track-btn:hover { background: rgba(255,255,255,0.1); }
-
-  /* PAGES */
-  .page { display: none; padding: 20px; max-width: 460px; margin: 0 auto; }
-  .page.active { display: block; }
-
-  /* HERO */
-  .hero { text-align: center; padding: 30px 0 20px; }
-  .hero-icon {
-    width: 72px; height: 72px; background: var(--orange);
-    border-radius: 50%; margin: 0 auto 16px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 32px;
-  }
-  .hero h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: 26px; font-weight: 800;
-    color: var(--dark); line-height: 1.2; margin-bottom: 8px;
-  }
-  .hero p { color: var(--muted); font-size: 14px; line-height: 1.6; }
-
-  /* SECTION LABEL */
-  .section-label {
-    font-size: 11px; font-weight: 600;
-    letter-spacing: 1.5px; color: var(--muted);
-    text-transform: uppercase; margin-bottom: 12px;
-  }
-
-  /* SERVICE CARDS */
-  .service-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
-  .service-card {
-    background: var(--white); border: 1.5px solid var(--border);
-    border-radius: var(--radius); padding: 16px 18px;
-    display: flex; align-items: center; gap: 14px;
-    cursor: pointer; transition: all 0.18s; user-select: none;
-    position: relative; overflow: hidden;
-  }
-  .service-card::before {
-    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-    width: 4px; border-radius: 2px 0 0 2px;
-  }
-  .service-card.spar::before { background: #E31837; }
-  .service-card.jumbo::before { background: #F7C732; }
-  .service-card.spaza::before { background: var(--green); }
-  .service-card.task::before { background: var(--orange); }
-  .service-card:hover { border-color: var(--orange); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(244,113,46,0.12); }
-  .service-card:active { transform: scale(0.98); }
-  .service-icon {
-    width: 48px; height: 48px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; flex-shrink: 0;
-  }
-  .spar .service-icon { background: #FDE8E8; }
-  .jumbo .service-icon { background: #FEF9E5; }
-  .spaza .service-icon { background: var(--green-light); }
-  .task .service-icon { background: var(--orange-light); }
-  .service-info { flex: 1; }
-  .service-info h3 { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--dark); }
-  .service-info p { font-size: 12px; color: var(--muted); margin-top: 2px; }
-  .service-fee {
-    background: var(--surface2); border-radius: 8px;
-    padding: 4px 10px; font-size: 12px; font-weight: 600;
-    color: var(--text); white-space: nowrap;
-  }
-  .service-card .arrow { color: var(--muted); font-size: 18px; }
-
-  /* BACK BUTTON */
-  .back-btn {
-    display: flex; align-items: center; gap: 6px;
-    background: none; border: none; cursor: pointer;
-    font-size: 13px; color: var(--muted);
-    font-family: 'DM Sans', sans-serif;
-    padding: 0 0 16px; transition: color 0.15s;
-  }
-  .back-btn:hover { color: var(--text); }
-
-  /* PAGE TITLE */
-  .page-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 22px; font-weight: 800;
-    color: var(--dark); margin-bottom: 6px;
-  }
-  .page-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
-
-  /* OPTION CARDS (sub-options) */
-  .option-cards { display: flex; flex-direction: column; gap: 10px; }
-  .option-card {
-    background: var(--white); border: 1.5px solid var(--border);
-    border-radius: var(--radius); padding: 18px;
-    cursor: pointer; transition: all 0.18s;
-  }
-  .option-card:hover { border-color: var(--orange); }
-  .option-card:active { transform: scale(0.98); }
-  .option-card h3 { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
-  .option-card p { font-size: 13px; color: var(--muted); line-height: 1.5; }
-  .option-badge {
-    display: inline-block; padding: 3px 10px;
-    border-radius: 20px; font-size: 11px; font-weight: 600;
-    margin-bottom: 8px;
-  }
-  .badge-green { background: var(--green-light); color: var(--green-dark); }
-  .badge-orange { background: var(--orange-light); color: var(--orange-dark); }
-  .badge-blue { background: #E3F0FC; color: #1A5FA0; }
-
-  /* INFO BOX */
-  .info-box {
-    background: var(--surface2); border-radius: var(--radius-sm);
-    padding: 14px 16px; margin-bottom: 16px; border-left: 3px solid var(--orange);
-  }
-  .info-box p { font-size: 13px; color: var(--text); line-height: 1.6; }
-  .info-box strong { color: var(--orange-dark); }
-
-  /* FORM */
-  .form-group { margin-bottom: 14px; }
-  .form-label {
-    display: block; font-size: 12px; font-weight: 600;
-    color: var(--muted); margin-bottom: 6px; letter-spacing: 0.3px;
-  }
-  .form-input, .form-textarea, .form-select {
-    width: 100%; border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm); padding: 12px 14px;
-    font-size: 14px; font-family: 'DM Sans', sans-serif;
-    color: var(--text); background: var(--white);
-    transition: border-color 0.15s; outline: none;
-    -webkit-appearance: none;
-  }
-  .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: var(--orange); }
-  .form-textarea { resize: vertical; min-height: 90px; }
-
-  /* ITEM ROW */
-  .item-row {
-    display: flex; gap: 8px; margin-bottom: 8px;
-  }
-  .item-row .form-input { flex: 1; }
-  .item-row .price-input { width: 100px; flex-shrink: 0; }
-  .add-item-btn {
-    width: 100%; border: 1.5px dashed var(--border);
-    background: none; border-radius: var(--radius-sm);
-    padding: 10px; font-size: 13px; color: var(--muted);
-    cursor: pointer; transition: all 0.15s;
-    font-family: 'DM Sans', sans-serif;
-  }
-  .add-item-btn:hover { border-color: var(--orange); color: var(--orange); }
-  .remove-item {
-    background: var(--red-light); border: none; border-radius: 8px;
-    width: 36px; height: 36px; cursor: pointer;
-    color: var(--red); font-size: 16px; display: flex;
-    align-items: center; justify-content: center; flex-shrink: 0;
-    margin-top: 0; align-self: center;
-  }
-  .total-bar {
-    background: var(--dark); border-radius: var(--radius-sm);
-    padding: 12px 16px; display: flex; justify-content: space-between;
-    align-items: center; margin-bottom: 16px;
-  }
-  .total-bar span { color: rgba(255,255,255,0.6); font-size: 12px; }
-  .total-bar strong { color: white; font-size: 16px; }
-
-  /* BTN */
-  .btn {
-    display: block; width: 100%; padding: 14px;
-    border-radius: var(--radius); border: none;
-    font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
-    cursor: pointer; transition: all 0.18s; text-align: center;
-  }
-  .btn-primary { background: var(--orange); color: white; }
-  .btn-primary:hover { background: var(--orange-dark); }
-  .btn-primary:active { transform: scale(0.98); }
-  .btn-outline {
-    background: transparent; color: var(--text);
-    border: 1.5px solid var(--border);
-  }
-  .btn-outline:hover { border-color: var(--text); }
-  .btn-green { background: var(--green); color: white; }
-  .btn-green:hover { background: var(--green-dark); }
-  .btn + .btn { margin-top: 8px; }
-
-  /* CONFIRM MODAL */
-  .confirm-modal {
-    position: fixed; inset: 0; background: rgba(26,18,8,0.6);
-    display: flex; align-items: flex-end; justify-content: center;
-    z-index: 200; backdrop-filter: blur(3px);
-    opacity: 0; pointer-events: none; transition: opacity 0.2s;
-  }
-  .confirm-modal.open { opacity: 1; pointer-events: all; }
-  .confirm-sheet {
-    background: var(--white); border-radius: 24px 24px 0 0;
-    padding: 24px 20px 32px; width: 100%; max-width: 460px;
-    transform: translateY(30px); transition: transform 0.25s;
-  }
-  .confirm-modal.open .confirm-sheet { transform: translateY(0); }
-  .confirm-sheet h2 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 12px; }
-  .order-summary-line {
-    display: flex; justify-content: space-between;
-    font-size: 13px; padding: 6px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .order-summary-line:last-child { border-bottom: none; }
-  .order-summary-line .label { color: var(--muted); }
-
-  /* STATUS PAGE */
-  .status-icon {
-    width: 80px; height: 80px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 36px; margin: 30px auto 20px;
-  }
-  .status-icon.pending { background: #FEF3C7; }
-  .status-icon.accepted { background: var(--green-light); }
-  .status-icon.rejected { background: var(--red-light); }
-  .status-title { text-align: center; font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; margin-bottom: 8px; }
-  .status-sub { text-align: center; font-size: 13px; color: var(--muted); margin-bottom: 24px; }
-
-  /* TRACKER */
-  .tracker {
-    background: var(--white); border: 1.5px solid var(--border);
-    border-radius: var(--radius); padding: 18px; margin-bottom: 16px;
-  }
-  .tracker-step {
-    display: flex; gap: 12px; align-items: flex-start; padding: 8px 0;
-  }
-  .tracker-dot {
-    width: 28px; height: 28px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px; flex-shrink: 0; margin-top: 2px;
-    border: 2px solid var(--border); color: var(--muted);
-    background: var(--surface);
-  }
-  .tracker-dot.done { background: var(--green); border-color: var(--green); color: white; }
-  .tracker-dot.active { background: var(--orange); border-color: var(--orange); color: white; }
-  .tracker-line { width: 2px; height: 20px; background: var(--border); margin-left: 12px; }
-  .tracker-line.done { background: var(--green); }
-  .tracker-info h4 { font-size: 14px; font-weight: 600; }
-  .tracker-info p { font-size: 12px; color: var(--muted); margin-top: 2px; }
-
-  /* ORDER ID BADGE */
-  .order-id-box {
-    background: var(--surface2); border-radius: var(--radius-sm);
-    padding: 12px 16px; text-align: center; margin-bottom: 16px;
-  }
-  .order-id-box p { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-  .order-id-box strong { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: var(--dark); }
-
-  /* DELIVERY TIME EXTENDED */
-  .delivery-info-bar {
-    background: var(--orange-light); border-radius: var(--radius-sm);
-    padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
-  }
-  .delivery-info-bar span { font-size: 20px; }
-  .delivery-info-bar p { font-size: 12px; color: var(--orange-dark); line-height: 1.4; }
-
-  /* LOCATION BTN */
-  .location-btn {
-    display: flex; align-items: center; gap: 8px;
-    background: var(--surface2); border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm); padding: 12px 14px;
-    font-size: 13px; color: var(--text); cursor: pointer;
-    width: 100%; font-family: 'DM Sans', sans-serif;
-    transition: border-color 0.15s; margin-bottom: 8px;
-  }
-  .location-btn:hover { border-color: var(--orange); }
-  .location-btn .loc-icon { font-size: 18px; }
-  .location-status { font-size: 12px; color: var(--green-dark); margin-bottom: 14px; font-weight: 500; }
-
-  /* TRACK FORM */
-  .track-form { display: flex; gap: 8px; margin-bottom: 20px; }
-  .track-form input { flex: 1; }
-
-  /* TOAST */
-  .toast {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
-    background: var(--dark); color: white; padding: 12px 20px;
-    border-radius: 30px; font-size: 13px; z-index: 300;
-    transition: transform 0.3s; white-space: nowrap;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-
-  /* EMPTY */
-  .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); }
-  .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
-
-  /* TASK SPECIFIC */
-  .task-examples {
-    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;
-  }
-  .task-chip {
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 20px; padding: 5px 12px; font-size: 12px;
-    color: var(--muted); cursor: pointer; transition: all 0.15s;
-  }
-  .task-chip:hover { background: var(--orange-light); border-color: var(--orange); color: var(--orange-dark); }
-
-  hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text)}
+  body{min-height:100vh;overflow-x:hidden}
+  header{background:var(--dark);padding:18px 20px 14px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+  header .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--white);line-height:1}
+  header .logo span{color:var(--orange)}
+  header .badge{background:var(--orange);color:white;font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;letter-spacing:.5px}
+  header .track-btn{margin-left:auto;background:transparent;border:1.5px solid rgba(255,255,255,.25);color:white;padding:6px 14px;border-radius:20px;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s}
+  .page{display:none;padding:20px;max-width:460px;margin:0 auto}
+  .page.active{display:block}
+  .hero{text-align:center;padding:30px 0 20px}
+  .hero-icon{width:72px;height:72px;background:var(--orange);border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:32px}
+  .hero h1{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--dark);line-height:1.2;margin-bottom:8px}
+  .hero p{color:var(--muted);font-size:14px;line-height:1.6}
+  .section-label{font-size:11px;font-weight:600;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:12px}
+  .service-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+  .service-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .18s;user-select:none;position:relative;overflow:hidden}
+  .service-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:2px 0 0 2px}
+  .service-card.spar::before{background:#E31837}
+  .service-card.jumbo::before{background:#F7C732}
+  .service-card.spaza::before{background:var(--green)}
+  .service-card.task::before{background:var(--orange)}
+  .service-card:hover{border-color:var(--orange);transform:translateY(-1px);box-shadow:0 4px 16px rgba(244,113,46,.12)}
+  .service-card:active{transform:scale(.98)}
+  .service-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+  .spar .service-icon{background:#FDE8E8}
+  .jumbo .service-icon{background:#FEF9E5}
+  .spaza .service-icon{background:var(--green-light)}
+  .task .service-icon{background:var(--orange-light)}
+  .service-info{flex:1}
+  .service-info h3{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--dark)}
+  .service-info p{font-size:12px;color:var(--muted);margin-top:2px}
+  .service-fee{background:var(--surface2);border-radius:8px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--text);white-space:nowrap}
+  .service-card .arrow{color:var(--muted);font-size:18px}
+  .back-btn{display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-size:13px;color:var(--muted);font-family:'DM Sans',sans-serif;padding:0 0 16px;transition:color .15s}
+  .page-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--dark);margin-bottom:6px}
+  .page-sub{font-size:13px;color:var(--muted);margin-bottom:20px}
+  .option-cards{display:flex;flex-direction:column;gap:10px}
+  .option-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:18px;cursor:pointer;transition:all .18s}
+  .option-card:hover{border-color:var(--orange)}
+  .option-card:active{transform:scale(.98)}
+  .option-card h3{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:6px}
+  .option-card p{font-size:13px;color:var(--muted);line-height:1.5}
+  .option-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-bottom:8px}
+  .badge-green{background:var(--green-light);color:var(--green-dark)}
+  .badge-orange{background:var(--orange-light);color:var(--orange-dark)}
+  .info-box{background:var(--surface2);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:16px;border-left:3px solid var(--orange)}
+  .info-box p{font-size:13px;color:var(--text);line-height:1.6}
+  .info-box strong{color:var(--orange-dark)}
+  .form-group{margin-bottom:14px}
+  .form-label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;letter-spacing:.3px}
+  .form-input,.form-textarea,.form-select{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--white);transition:border-color .15s;outline:none;-webkit-appearance:none}
+  .form-input:focus,.form-textarea:focus,.form-select:focus{border-color:var(--orange)}
+  .form-textarea{resize:vertical;min-height:90px}
+  .item-row{display:flex;gap:8px;margin-bottom:8px}
+  .item-row .form-input{flex:1}
+  .item-row .price-input{width:100px;flex-shrink:0}
+  .add-item-btn{width:100%;border:1.5px dashed var(--border);background:none;border-radius:var(--radius-sm);padding:10px;font-size:13px;color:var(--muted);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+  .add-item-btn:hover{border-color:var(--orange);color:var(--orange)}
+  .remove-item{background:var(--red-light);border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;color:var(--red);font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:center}
+  .total-bar{background:var(--dark);border-radius:var(--radius-sm);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+  .total-bar span{color:rgba(255,255,255,.6);font-size:12px}
+  .total-bar strong{color:white;font-size:16px}
+  .btn{display:block;width:100%;padding:14px;border-radius:var(--radius);border:none;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .18s;text-align:center}
+  .btn-primary{background:var(--orange);color:white}
+  .btn-primary:hover{background:var(--orange-dark)}
+  .btn-primary:active{transform:scale(.98)}
+  .btn-outline{background:transparent;color:var(--text);border:1.5px solid var(--border)}
+  .btn+.btn{margin-top:8px}
+  .confirm-modal{position:fixed;inset:0;background:rgba(26,18,8,.6);display:flex;align-items:flex-end;justify-content:center;z-index:200;backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .2s}
+  .confirm-modal.open{opacity:1;pointer-events:all}
+  .confirm-sheet{background:var(--white);border-radius:24px 24px 0 0;padding:24px 20px 32px;width:100%;max-width:460px;transform:translateY(30px);transition:transform .25s}
+  .confirm-modal.open .confirm-sheet{transform:translateY(0)}
+  .confirm-sheet h2{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:12px}
+  .order-summary-line{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border)}
+  .order-summary-line:last-child{border-bottom:none}
+  .order-summary-line .label{color:var(--muted)}
+  .status-icon{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;margin:30px auto 20px}
+  .status-icon.pending{background:#FEF3C7}
+  .status-icon.accepted{background:var(--green-light)}
+  .status-icon.rejected{background:var(--red-light)}
+  .status-title{text-align:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:8px}
+  .status-sub{text-align:center;font-size:13px;color:var(--muted);margin-bottom:24px}
+  .tracker{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:16px}
+  .tracker-step{display:flex;gap:12px;align-items:flex-start;padding:8px 0}
+  .tracker-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:2px;border:2px solid var(--border);color:var(--muted);background:var(--surface)}
+  .tracker-dot.done{background:var(--green);border-color:var(--green);color:white}
+  .tracker-dot.active{background:var(--orange);border-color:var(--orange);color:white}
+  .tracker-line{width:2px;height:20px;background:var(--border);margin-left:12px}
+  .tracker-line.done{background:var(--green)}
+  .tracker-info h4{font-size:14px;font-weight:600}
+  .tracker-info p{font-size:12px;color:var(--muted);margin-top:2px}
+  .order-id-box{background:var(--surface2);border-radius:var(--radius-sm);padding:12px 16px;text-align:center;margin-bottom:16px}
+  .order-id-box p{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+  .order-id-box strong{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--dark)}
+  .delivery-info-bar{background:var(--orange-light);border-radius:var(--radius-sm);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+  .delivery-info-bar span{font-size:20px}
+  .delivery-info-bar p{font-size:12px;color:var(--orange-dark);line-height:1.4}
+  .location-btn{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--text);cursor:pointer;width:100%;font-family:'DM Sans',sans-serif;transition:border-color .15s;margin-bottom:8px}
+  .location-btn:hover{border-color:var(--orange)}
+  .location-status{font-size:12px;color:var(--green-dark);margin-bottom:14px;font-weight:500}
+  .track-form{display:flex;gap:8px;margin-bottom:20px}
+  .track-form input{flex:1}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--dark);color:white;padding:12px 20px;border-radius:30px;font-size:13px;z-index:300;transition:transform .3s;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  .empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
+  .empty-state .icon{font-size:48px;margin-bottom:12px}
+  .task-examples{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .task-chip{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .15s}
+  .task-chip:hover{background:var(--orange-light);border-color:var(--orange);color:var(--orange-dark)}
+  hr{border:none;border-top:1px solid var(--border);margin:16px 0}
+  .fb-loading{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px}
 </style>
 </head>
 <body>
 
 <header>
-  <div>
-    <div class="logo">Sydenham <span>ErrandBoy</span></div>
-  </div>
+  <div><div class="logo">Sydenham <span>ErrandBoy</span></div></div>
   <div class="badge">🛵 LIVE</div>
   <button class="track-btn" onclick="showPage('track')">Track Order</button>
 </header>
 
-<!-- PAGE: HOME -->
 <div class="page active" id="page-home">
   <div class="hero">
     <div class="hero-icon">🛒</div>
     <h1>Your Errand Guy<br>is Ready!</h1>
     <p>Pick what you need & someone will be at your gate. Fast, easy, local.</p>
   </div>
-
   <p class="section-label">Choose a Store</p>
   <div class="service-grid">
     <div class="service-card spar" onclick="showStore('spar')">
       <div class="service-icon">🔴</div>
-      <div class="service-info">
-        <h3>Spar</h3>
-        <p>Delivered in ~30 minutes</p>
-      </div>
-      <span class="service-fee">R10</span>
-      <span class="arrow">›</span>
+      <div class="service-info"><h3>Spar</h3><p>Delivered in ~30 minutes</p></div>
+      <span class="service-fee">R10</span><span class="arrow">›</span>
     </div>
     <div class="service-card jumbo" onclick="showStore('jumbo')">
       <div class="service-icon">🟡</div>
-      <div class="service-info">
-        <h3>Jumbo</h3>
-        <p>Delivered in ~60 minutes</p>
-      </div>
-      <span class="service-fee">R20</span>
-      <span class="arrow">›</span>
+      <div class="service-info"><h3>Jumbo</h3><p>Delivered in ~60 minutes</p></div>
+      <span class="service-fee">R20</span><span class="arrow">›</span>
     </div>
     <div class="service-card spaza" onclick="showStore('spaza')">
       <div class="service-icon">🏪</div>
-      <div class="service-info">
-        <h3>Local Spaza / Sydenham Store</h3>
-        <p>Quick runs, nearby shops</p>
-      </div>
-      <span class="service-fee">R10</span>
-      <span class="arrow">›</span>
+      <div class="service-info"><h3>Local Spaza / Sydenham Store</h3><p>Quick runs, nearby shops</p></div>
+      <span class="service-fee">R10</span><span class="arrow">›</span>
     </div>
   </div>
-
   <p class="section-label">Other</p>
   <div class="service-grid">
     <div class="service-card task" onclick="showPage('task')">
       <div class="service-icon">⚡</div>
-      <div class="service-info">
-        <h3>Specific Task</h3>
-        <p>Tell us what needs doing</p>
-      </div>
+      <div class="service-info"><h3>Specific Task</h3><p>Tell us what needs doing</p></div>
       <span class="arrow">›</span>
     </div>
   </div>
 </div>
 
-<!-- PAGE: STORE OPTIONS (Spar / Jumbo / Spaza) -->
 <div class="page" id="page-store">
   <button class="back-btn" onclick="showPage('home')">← Back</button>
   <div id="store-header"></div>
   <div class="option-cards" id="store-options"></div>
 </div>
 
-<!-- PAGE: ORDER FORM -->
 <div class="page" id="page-order">
   <button class="back-btn" id="order-back-btn">← Back</button>
   <p class="page-title" id="order-title">Your Order</p>
   <p class="page-sub" id="order-sub"></p>
   <div class="info-box" id="order-info"></div>
-
   <div id="items-section">
     <p class="form-label">What do you need? Add each item below</p>
     <div id="items-list"></div>
     <button class="add-item-btn" onclick="addItemRow()">+ Add Item</button>
     <div class="total-bar" style="margin-top:12px">
-      <span>Estimated Total</span>
-      <strong id="est-total">R 0.00</strong>
+      <span>Estimated Total</span><strong id="est-total">R 0.00</strong>
     </div>
   </div>
-
   <div id="pickup-money-section" style="display:none">
-    <div class="info-box">
-      <p>💵 The delivery person will come to your gate first to <strong>collect your money</strong>, then go to the store on your behalf. Please have the amount ready.</p>
-    </div>
+    <div class="info-box"><p>💵 The delivery person will come to your gate first to <strong>collect your money</strong>, then go to the store on your behalf.</p></div>
     <p class="form-label">Shopping list & estimated amounts</p>
     <div id="items-list2"></div>
     <button class="add-item-btn" onclick="addItemRow2()">+ Add Item</button>
     <div class="total-bar" style="margin-top:12px">
-      <span>Estimated Total</span>
-      <strong id="est-total2">R 0.00</strong>
+      <span>Estimated Total</span><strong id="est-total2">R 0.00</strong>
     </div>
   </div>
-
   <hr>
   <p class="form-label">Your Details</p>
-  <div class="form-group">
-    <label class="form-label">Full Name</label>
-    <input type="text" class="form-input" id="f-name" placeholder="e.g. Thabo Nkosi">
-  </div>
-  <div class="form-group">
-    <label class="form-label">Phone Number</label>
-    <input type="tel" class="form-input" id="f-phone" placeholder="e.g. 073 123 4567">
-  </div>
+  <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="f-name" placeholder="e.g. Thabo Nkosi"></div>
+  <div class="form-group"><label class="form-label">Phone Number</label><input type="tel" class="form-input" id="f-phone" placeholder="e.g. 073 123 4567"></div>
   <hr>
   <p class="form-label">Delivery Location</p>
   <button class="location-btn" onclick="getLocation()">
-    <span class="loc-icon">📍</span>
-    <span id="loc-btn-text">Use My Live Location</span>
+    <span class="loc-icon">📍</span><span id="loc-btn-text">Use My Live Location</span>
   </button>
   <div id="loc-status" class="location-status" style="display:none"></div>
-  <div class="form-group">
-    <label class="form-label">Street Address & Gate/Unit (Required)</label>
-    <input type="text" class="form-input" id="f-address" placeholder="e.g. 42 Berea Road, Gate 3">
-  </div>
-  <div class="form-group">
-    <label class="form-label">Landmark / Notes for Driver</label>
-    <input type="text" class="form-input" id="f-landmark" placeholder="e.g. Blue gate, next to Spar">
-  </div>
+  <div class="form-group"><label class="form-label">Street Address & Gate/Unit (Required)</label><input type="text" class="form-input" id="f-address" placeholder="e.g. 42 Berea Road, Gate 3"></div>
+  <div class="form-group"><label class="form-label">Landmark / Notes for Driver</label><input type="text" class="form-input" id="f-landmark" placeholder="e.g. Blue gate, next to Spar"></div>
   <hr>
   <div class="form-group" id="payment-method-group">
     <label class="form-label">Preferred Payment Method</label>
@@ -486,20 +221,15 @@
       <option value="discuss">Discuss on Arrival</option>
     </select>
   </div>
-  <div class="form-group">
-    <label class="form-label">Any special instructions?</label>
-    <textarea class="form-textarea" id="f-notes" placeholder="e.g. No substitutions on the bread please"></textarea>
-  </div>
+  <div class="form-group"><label class="form-label">Any special instructions?</label><textarea class="form-textarea" id="f-notes" placeholder="e.g. No substitutions on the bread please"></textarea></div>
   <br>
   <button class="btn btn-primary" onclick="confirmOrder()">Review My Order →</button>
 </div>
 
-<!-- PAGE: TASK -->
 <div class="page" id="page-task">
   <button class="back-btn" onclick="showPage('home')">← Back</button>
   <p class="page-title">Specific Task</p>
   <p class="page-sub">Need something done? Tell us what, where & how much you'll pay.</p>
-
   <div class="form-group">
     <label class="form-label">What do you need done?</label>
     <div class="task-examples">
@@ -511,28 +241,13 @@
     </div>
     <textarea class="form-textarea" id="t-description" placeholder="Describe what you need done in detail..."></textarea>
   </div>
-  <div class="form-group">
-    <label class="form-label">Where does this need to happen?</label>
-    <input type="text" class="form-input" id="t-location" placeholder="e.g. Berea Road, Sydenham or a specific address">
-  </div>
-  <div class="form-group">
-    <label class="form-label">How much are you willing to pay?</label>
-    <input type="number" class="form-input" id="t-price" placeholder="e.g. 50" min="0">
-  </div>
+  <div class="form-group"><label class="form-label">Where does this need to happen?</label><input type="text" class="form-input" id="t-location" placeholder="e.g. Berea Road, Sydenham or a specific address"></div>
+  <div class="form-group"><label class="form-label">How much are you willing to pay?</label><input type="number" class="form-input" id="t-price" placeholder="e.g. 50" min="0"></div>
   <hr>
   <p class="form-label">Your Details</p>
-  <div class="form-group">
-    <label class="form-label">Full Name</label>
-    <input type="text" class="form-input" id="t-name" placeholder="e.g. Priya Singh">
-  </div>
-  <div class="form-group">
-    <label class="form-label">Phone Number</label>
-    <input type="tel" class="form-input" id="t-phone" placeholder="e.g. 082 456 7890">
-  </div>
-  <div class="form-group">
-    <label class="form-label">Your Address / Where to find you</label>
-    <input type="text" class="form-input" id="t-address" placeholder="e.g. 12 Main St, Gate 2">
-  </div>
+  <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="t-name" placeholder="e.g. Priya Singh"></div>
+  <div class="form-group"><label class="form-label">Phone Number</label><input type="tel" class="form-input" id="t-phone" placeholder="e.g. 082 456 7890"></div>
+  <div class="form-group"><label class="form-label">Your Address / Where to find you</label><input type="text" class="form-input" id="t-address" placeholder="e.g. 12 Main St, Gate 2"></div>
   <div class="form-group">
     <label class="form-label">Preferred Payment</label>
     <select class="form-select" id="t-payment">
@@ -547,13 +262,11 @@
   <button class="btn btn-primary" onclick="submitTask()">Submit Task →</button>
 </div>
 
-<!-- PAGE: STATUS -->
 <div class="page" id="page-status">
   <div id="status-content"></div>
   <button class="btn btn-outline" onclick="showPage('home')" style="margin-top:8px">Place Another Order</button>
 </div>
 
-<!-- PAGE: TRACK -->
 <div class="page" id="page-track">
   <button class="back-btn" onclick="showPage('home')">← Home</button>
   <p class="page-title">Track Your Order</p>
@@ -563,13 +276,10 @@
     <button class="btn btn-primary" style="width:auto;padding:12px 18px" onclick="trackOrder()">Track</button>
   </div>
   <div id="track-result"></div>
-  <div id="recent-orders-section">
-    <p class="section-label">Your Recent Orders</p>
-    <div id="recent-orders-list"></div>
-  </div>
+  <p class="section-label">Your Recent Orders</p>
+  <div id="recent-orders-list"></div>
 </div>
 
-<!-- CONFIRM MODAL -->
 <div class="confirm-modal" id="confirm-modal">
   <div class="confirm-sheet">
     <h2>Confirm Your Order 📋</h2>
@@ -582,465 +292,264 @@
 
 <div class="toast" id="toast"></div>
 
-<script>
-let currentStore = '';
-let currentOption = '';
-let locationData = null;
-let pendingOrder = null;
-let itemsData = [];
-let itemsData2 = [];
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, get, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-const STORES = {
-  spar: {
-    name: 'Spar',
-    fee: 'R10',
-    icon: '🔴',
-    time: '~30 minutes',
-    options: [
-      { id: 'under100', label: 'Buying for less than R100', badge: 'badge-green', badgeText: 'Pay at delivery' },
-      { id: 'over100', label: 'Buying for more than R100', badge: 'badge-orange', badgeText: 'Driver collects cash first' }
-    ]
-  },
-  jumbo: {
-    name: 'Jumbo',
-    fee: 'R20',
-    icon: '🟡',
-    time: '~60 minutes',
-    options: [
-      { id: 'under100', label: 'Buying for less than R100', badge: 'badge-green', badgeText: 'Pay at delivery' },
-      { id: 'over100', label: 'Buying for more than R100', badge: 'badge-orange', badgeText: 'Driver collects cash first' }
-    ]
-  },
-  spaza: {
-    name: 'Local Spaza / Sydenham Store',
-    fee: 'R10',
-    icon: '🏪',
-    time: '~20 minutes',
-    options: [
-      { id: 'under100', label: 'Buying for less than R100', badge: 'badge-green', badgeText: 'Pay at delivery' },
-      { id: 'over100', label: 'Buying for more than R100', badge: 'badge-orange', badgeText: 'Driver collects cash first' }
-    ]
-  }
+const firebaseConfig = {
+  apiKey: "AIzaSyAB18k8GeWdC0v2c0C6CHS99CzIt7OXYBs",
+  authDomain: "sydenham-errandboy.firebaseapp.com",
+  databaseURL: "https://sydenham-errandboy-default-rtdb.firebaseio.com",
+  projectId: "sydenham-errandboy",
+  storageBucket: "sydenham-errandboy.firebasestorage.app",
+  messagingSenderId: "413060964375",
+  appId: "1:413060964375:web:cd83c85e9d44ae6557bc52",
+  measurementId: "G-45LKS37KDB"
 };
 
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  window.scrollTo(0, 0);
-  if (id === 'track') loadRecentOrders();
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window._fbDb = db;
+window._fbRef = ref;
+window._fbSet = set;
+window._fbGet = get;
+window._fbOnValue = onValue;
+window._fbServerTimestamp = serverTimestamp;
+window._fbReady = true;
+
+console.log("Firebase ready");
+</script>
+
+<script>
+let currentStore='',currentOption='',locationData=null,pendingOrder=null,itemsData=[],itemsData2=[];
+let statusWatcher=null;
+
+const STORES={
+  spar:{name:'Spar',fee:'R10',icon:'🔴',time:'~30 minutes',options:[{id:'under100',label:'Buying for less than R100',badge:'badge-green',badgeText:'Pay at delivery'},{id:'over100',label:'Buying for more than R100',badge:'badge-orange',badgeText:'Driver collects cash first'}]},
+  jumbo:{name:'Jumbo',fee:'R20',icon:'🟡',time:'~60 minutes',options:[{id:'under100',label:'Buying for less than R100',badge:'badge-green',badgeText:'Pay at delivery'},{id:'over100',label:'Buying for more than R100',badge:'badge-orange',badgeText:'Driver collects cash first'}]},
+  spaza:{name:'Local Spaza / Sydenham Store',fee:'R10',icon:'🏪',time:'~20 minutes',options:[{id:'under100',label:'Buying for less than R100',badge:'badge-green',badgeText:'Pay at delivery'},{id:'over100',label:'Buying for more than R100',badge:'badge-orange',badgeText:'Driver collects cash first'}]}
+};
+
+function waitForFirebase(cb){
+  if(window._fbReady) cb();
+  else setTimeout(()=>waitForFirebase(cb),100);
 }
 
-function showStore(store) {
-  currentStore = store;
-  const s = STORES[store];
-  document.getElementById('store-header').innerHTML = `
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-      <span style="font-size:28px">${s.icon}</span>
-      <div>
-        <p class="page-title">${s.name}</p>
-        <p class="page-sub" style="margin:0">Delivery fee: ${s.fee} · ${s.time}</p>
-      </div>
-    </div>
-    <p class="section-label">How much are you spending?</p>
-  `;
-  document.getElementById('store-options').innerHTML = s.options.map(opt => `
-    <div class="option-card" onclick="showOrderForm('${store}','${opt.id}')">
-      <span class="option-badge ${opt.badge}">${opt.badgeText}</span>
-      <h3>${opt.label}</h3>
-      <p>${opt.id === 'under100' ? 
-        `The errand boy goes shopping for you. Bring the items to your gate. You pay the actual price shown on the slip plus the ${s.fee} delivery fee.` :
-        `The errand boy comes to your gate first to collect payment, then goes to shop. Payment method to be discussed on arrival.`
-      }</p>
-    </div>
-  `).join('');
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='track') loadRecentOrders();
+}
+
+function showStore(store){
+  currentStore=store;
+  const s=STORES[store];
+  document.getElementById('store-header').innerHTML=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px"><span style="font-size:28px">${s.icon}</span><div><p class="page-title">${s.name}</p><p class="page-sub" style="margin:0">Delivery fee: ${s.fee} · ${s.time}</p></div></div><p class="section-label">How much are you spending?</p>`;
+  document.getElementById('store-options').innerHTML=s.options.map(opt=>`<div class="option-card" onclick="showOrderForm('${store}','${opt.id}')"><span class="option-badge ${opt.badge}">${opt.badgeText}</span><h3>${opt.label}</h3><p>${opt.id==='under100'?`The errand boy goes shopping for you. Bring the items to your gate. You pay the actual price shown on the slip plus the ${s.fee} delivery fee.`:`The errand boy comes to your gate first to collect payment, then goes to shop. Payment method to be discussed on arrival.`}</p></div>`).join('');
   showPage('store');
 }
 
-function showOrderForm(store, option) {
-  currentStore = store;
-  currentOption = option;
-  itemsData = [];
-  itemsData2 = [];
-  const s = STORES[store];
-
-  document.getElementById('order-back-btn').onclick = () => showStore(store);
-  document.getElementById('order-title').textContent = `Order from ${s.name}`;
-
-  if (option === 'under100') {
-    document.getElementById('order-sub').textContent = `Buying less than R100 · Pay at delivery · ${s.time}`;
-    document.getElementById('order-info').innerHTML = `<p>📦 List what you need and the estimated price. The errand boy will bring your items and the <strong>slip</strong> — you pay the actual price + <strong>${s.fee} delivery fee</strong> when they arrive. Ready in <strong>${s.time}</strong>.</p>`;
-    document.getElementById('items-section').style.display = 'block';
-    document.getElementById('pickup-money-section').style.display = 'none';
-    document.getElementById('payment-method-group').style.display = 'block';
-    itemsData = [];
+function showOrderForm(store,option){
+  currentStore=store;currentOption=option;itemsData=[];itemsData2=[];
+  const s=STORES[store];
+  document.getElementById('order-back-btn').onclick=()=>showStore(store);
+  document.getElementById('order-title').textContent=`Order from ${s.name}`;
+  if(option==='under100'){
+    document.getElementById('order-sub').textContent=`Buying less than R100 · Pay at delivery · ${s.time}`;
+    document.getElementById('order-info').innerHTML=`<p>📦 List what you need and the estimated price. The errand boy will bring your items and the <strong>slip</strong> — you pay the actual price + <strong>${s.fee} delivery fee</strong> when they arrive.</p>`;
+    document.getElementById('items-section').style.display='block';
+    document.getElementById('pickup-money-section').style.display='none';
+    document.getElementById('payment-method-group').style.display='block';
     renderItems();
   } else {
-    document.getElementById('order-sub').textContent = `Buying more than R100 · Driver collects money first`;
-    document.getElementById('order-info').innerHTML = `<p>💵 The errand boy will come to your gate to <strong>collect your money first</strong>, then head to ${s.name}. Payment details will be discussed on arrival. List items below.</p>`;
-    document.getElementById('items-section').style.display = 'none';
-    document.getElementById('pickup-money-section').style.display = 'block';
-    document.getElementById('payment-method-group').style.display = 'none';
-    itemsData2 = [];
+    document.getElementById('order-sub').textContent=`Buying more than R100 · Driver collects money first`;
+    document.getElementById('order-info').innerHTML=`<p>💵 The errand boy will come to your gate to <strong>collect your money first</strong>, then head to ${s.name}.</p>`;
+    document.getElementById('items-section').style.display='none';
+    document.getElementById('pickup-money-section').style.display='block';
+    document.getElementById('payment-method-group').style.display='none';
     renderItems2();
   }
-
-  document.getElementById('f-name').value = '';
-  document.getElementById('f-phone').value = '';
-  document.getElementById('f-address').value = '';
-  document.getElementById('f-landmark').value = '';
-  document.getElementById('f-notes').value = '';
-  document.getElementById('f-payment').value = '';
-  document.getElementById('loc-status').style.display = 'none';
-  document.getElementById('loc-btn-text').textContent = 'Use My Live Location';
-  locationData = null;
+  ['f-name','f-phone','f-address','f-landmark','f-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-payment').value='';
+  document.getElementById('loc-status').style.display='none';
+  document.getElementById('loc-btn-text').textContent='Use My Live Location';
+  locationData=null;
   showPage('order');
 }
 
-function addItemRow() {
-  itemsData.push({ name: '', price: '' });
-  renderItems();
-}
+function addItemRow(){itemsData.push({name:'',price:''});renderItems()}
+function addItemRow2(){itemsData2.push({name:'',price:''});renderItems2()}
 
-function addItemRow2() {
-  itemsData2.push({ name: '', price: '' });
-  renderItems2();
-}
-
-function renderItems() {
-  const el = document.getElementById('items-list');
-  if (itemsData.length === 0) itemsData.push({ name: '', price: '' });
-  el.innerHTML = itemsData.map((item, i) => `
-    <div class="item-row">
-      <input type="text" class="form-input" placeholder="Item name" value="${item.name}"
-        oninput="itemsData[${i}].name=this.value">
-      <input type="number" class="form-input price-input" placeholder="R est." value="${item.price}"
-        oninput="itemsData[${i}].price=this.value;updateTotal()">
-      ${itemsData.length > 1 ? `<button class="remove-item" onclick="removeItem(${i})">✕</button>` : ''}
-    </div>
-  `).join('');
+function renderItems(){
+  const el=document.getElementById('items-list');
+  if(itemsData.length===0) itemsData.push({name:'',price:''});
+  el.innerHTML=itemsData.map((item,i)=>`<div class="item-row"><input type="text" class="form-input" placeholder="Item name" value="${item.name}" oninput="itemsData[${i}].name=this.value"><input type="number" class="form-input price-input" placeholder="R est." value="${item.price}" oninput="itemsData[${i}].price=this.value;updateTotal()">${itemsData.length>1?`<button class="remove-item" onclick="removeItem(${i})">✕</button>`:''}</div>`).join('');
   updateTotal();
 }
-
-function renderItems2() {
-  const el = document.getElementById('items-list2');
-  if (itemsData2.length === 0) itemsData2.push({ name: '', price: '' });
-  el.innerHTML = itemsData2.map((item, i) => `
-    <div class="item-row">
-      <input type="text" class="form-input" placeholder="Item name" value="${item.name}"
-        oninput="itemsData2[${i}].name=this.value">
-      <input type="number" class="form-input price-input" placeholder="R est." value="${item.price}"
-        oninput="itemsData2[${i}].price=this.value;updateTotal2()">
-      ${itemsData2.length > 1 ? `<button class="remove-item" onclick="removeItem2(${i})">✕</button>` : ''}
-    </div>
-  `).join('');
+function renderItems2(){
+  const el=document.getElementById('items-list2');
+  if(itemsData2.length===0) itemsData2.push({name:'',price:''});
+  el.innerHTML=itemsData2.map((item,i)=>`<div class="item-row"><input type="text" class="form-input" placeholder="Item name" value="${item.name}" oninput="itemsData2[${i}].name=this.value"><input type="number" class="form-input price-input" placeholder="R est." value="${item.price}" oninput="itemsData2[${i}].price=this.value;updateTotal2()">${itemsData2.length>1?`<button class="remove-item" onclick="removeItem2(${i})">✕</button>`:''}</div>`).join('');
   updateTotal2();
 }
+function removeItem(i){itemsData.splice(i,1);renderItems()}
+function removeItem2(i){itemsData2.splice(i,1);renderItems2()}
+function updateTotal(){const t=itemsData.reduce((s,i)=>s+(parseFloat(i.price)||0),0);document.getElementById('est-total').textContent=`R ${t.toFixed(2)}`}
+function updateTotal2(){const t=itemsData2.reduce((s,i)=>s+(parseFloat(i.price)||0),0);document.getElementById('est-total2').textContent=`R ${t.toFixed(2)}`}
 
-function removeItem(i) { itemsData.splice(i, 1); renderItems(); }
-function removeItem2(i) { itemsData2.splice(i, 1); renderItems2(); }
-
-function updateTotal() {
-  const total = itemsData.reduce((s, item) => s + (parseFloat(item.price) || 0), 0);
-  document.getElementById('est-total').textContent = `R ${total.toFixed(2)}`;
-}
-function updateTotal2() {
-  const total = itemsData2.reduce((s, item) => s + (parseFloat(item.price) || 0), 0);
-  document.getElementById('est-total2').textContent = `R ${total.toFixed(2)}`;
-}
-
-function getLocation() {
-  document.getElementById('loc-btn-text').textContent = 'Getting location...';
-  if (!navigator.geolocation) {
-    showToast('Geolocation not supported. Enter address manually.');
-    return;
-  }
-  navigator.geolocation.getCurrentPosition(pos => {
-    locationData = { lat: pos.coords.latitude.toFixed(5), lng: pos.coords.longitude.toFixed(5) };
-    document.getElementById('loc-btn-text').textContent = '✓ Location captured';
-    document.getElementById('loc-status').style.display = 'block';
-    document.getElementById('loc-status').textContent = `📍 Got it: ${locationData.lat}, ${locationData.lng}`;
-  }, err => {
-    document.getElementById('loc-btn-text').textContent = 'Use My Live Location';
-    showToast('Could not get location. Please enter address.');
-  });
+function getLocation(){
+  document.getElementById('loc-btn-text').textContent='Getting location...';
+  if(!navigator.geolocation){showToast('Enter address manually.');return}
+  navigator.geolocation.getCurrentPosition(pos=>{
+    locationData={lat:pos.coords.latitude.toFixed(5),lng:pos.coords.longitude.toFixed(5)};
+    document.getElementById('loc-btn-text').textContent='✓ Location captured';
+    document.getElementById('loc-status').style.display='block';
+    document.getElementById('loc-status').textContent=`📍 Got it: ${locationData.lat}, ${locationData.lng}`;
+  },()=>{document.getElementById('loc-btn-text').textContent='Use My Live Location';showToast('Could not get location. Enter address.')});
 }
 
-function confirmOrder() {
-  const name = document.getElementById('f-name').value.trim();
-  const phone = document.getElementById('f-phone').value.trim();
-  const address = document.getElementById('f-address').value.trim();
-
-  if (!name) { showToast('Please enter your name'); return; }
-  if (!phone) { showToast('Please enter your phone number'); return; }
-  if (!address) { showToast('Please enter your address'); return; }
-
-  const items = currentOption === 'under100' ? itemsData : itemsData2;
-  const hasItems = items.some(i => i.name.trim());
-  if (!hasItems) { showToast('Please add at least one item'); return; }
-
-  const s = STORES[currentStore];
-  const total = items.reduce((s, i) => s + (parseFloat(i.price) || 0), 0);
-  const itemsList = items.filter(i => i.name.trim())
-    .map(i => `<div class="order-summary-line"><span class="label">${i.name}</span><span>~R${parseFloat(i.price||0).toFixed(2)}</span></div>`)
-    .join('');
-
-  const payment = document.getElementById('f-payment') ? document.getElementById('f-payment').value : 'discuss';
-
-  pendingOrder = {
-    store: currentStore, storeName: s.name, option: currentOption,
-    name, phone, address,
-    landmark: document.getElementById('f-landmark').value,
-    notes: document.getElementById('f-notes').value,
-    payment, items: items.filter(i => i.name.trim()),
-    estimatedTotal: total,
-    location: locationData,
-    deliveryFee: s.fee,
-    deliveryTime: s.time,
-    type: 'shopping'
-  };
-
-  document.getElementById('confirm-summary').innerHTML = `
-    <div class="order-summary-line"><span class="label">Store</span><span>${s.name}</span></div>
-    <div class="order-summary-line"><span class="label">Option</span><span>${currentOption === 'under100' ? 'Under R100' : 'Over R100'}</span></div>
-    ${itemsList}
-    <div class="order-summary-line"><span class="label">Est. Shopping Total</span><span>R${total.toFixed(2)}</span></div>
-    <div class="order-summary-line"><span class="label">Delivery Fee</span><span>${s.fee}</span></div>
-    <div class="order-summary-line"><span class="label">Delivery To</span><span>${address}</span></div>
-    <div class="order-summary-line"><span class="label">Name</span><span>${name}</span></div>
-    <div class="order-summary-line"><span class="label">Phone</span><span>${phone}</span></div>
-  `;
+function confirmOrder(){
+  const name=document.getElementById('f-name').value.trim();
+  const phone=document.getElementById('f-phone').value.trim();
+  const address=document.getElementById('f-address').value.trim();
+  if(!name){showToast('Please enter your name');return}
+  if(!phone){showToast('Please enter your phone number');return}
+  if(!address){showToast('Please enter your address');return}
+  const items=currentOption==='under100'?itemsData:itemsData2;
+  if(!items.some(i=>i.name.trim())){showToast('Please add at least one item');return}
+  const s=STORES[currentStore];
+  const total=items.reduce((s,i)=>s+(parseFloat(i.price)||0),0);
+  const itemsList=items.filter(i=>i.name.trim()).map(i=>`<div class="order-summary-line"><span class="label">${i.name}</span><span>~R${parseFloat(i.price||0).toFixed(2)}</span></div>`).join('');
+  pendingOrder={store:currentStore,storeName:s.name,option:currentOption,name,phone,address,landmark:document.getElementById('f-landmark').value,notes:document.getElementById('f-notes').value,payment:document.getElementById('f-payment').value,items:items.filter(i=>i.name.trim()),estimatedTotal:total,location:locationData,deliveryFee:s.fee,deliveryTime:s.time,type:'shopping'};
+  document.getElementById('confirm-summary').innerHTML=`<div class="order-summary-line"><span class="label">Store</span><span>${s.name}</span></div><div class="order-summary-line"><span class="label">Option</span><span>${currentOption==='under100'?'Under R100':'Over R100'}</span></div>${itemsList}<div class="order-summary-line"><span class="label">Est. Shopping Total</span><span>R${total.toFixed(2)}</span></div><div class="order-summary-line"><span class="label">Delivery Fee</span><span>${s.fee}</span></div><div class="order-summary-line"><span class="label">Delivery To</span><span>${address}</span></div><div class="order-summary-line"><span class="label">Name</span><span>${name}</span></div><div class="order-summary-line"><span class="label">Phone</span><span>${phone}</span></div>`;
   document.getElementById('confirm-modal').classList.add('open');
 }
 
-function closeConfirm() {
-  document.getElementById('confirm-modal').classList.remove('open');
-}
+function closeConfirm(){document.getElementById('confirm-modal').classList.remove('open')}
 
-function generateOrderId() {
-  return 'EB-' + Math.floor(1000 + Math.random() * 9000);
-}
+function generateOrderId(){return'EB-'+Math.floor(1000+Math.random()*9000)}
 
-function placeOrder() {
+function placeOrder(){
   closeConfirm();
-  const orderId = generateOrderId();
-  const order = {
-    ...pendingOrder,
-    id: orderId,
-    status: 'pending',
-    createdAt: Date.now(),
-    expiresAt: Date.now() + 60 * 60 * 1000
-  };
-  saveOrder(order);
-  showOrderStatus(order);
-}
-
-function submitTask() {
-  const desc = document.getElementById('t-description').value.trim();
-  const loc = document.getElementById('t-location').value.trim();
-  const price = document.getElementById('t-price').value;
-  const name = document.getElementById('t-name').value.trim();
-  const phone = document.getElementById('t-phone').value.trim();
-  const address = document.getElementById('t-address').value.trim();
-  const payment = document.getElementById('t-payment').value;
-
-  if (!desc) { showToast('Please describe what you need done'); return; }
-  if (!name) { showToast('Please enter your name'); return; }
-  if (!phone) { showToast('Please enter your phone number'); return; }
-  if (!address) { showToast('Please enter your address'); return; }
-
-  const orderId = generateOrderId();
-  const order = {
-    id: orderId, type: 'task',
-    description: desc, taskLocation: loc,
-    offeredPrice: price ? `R${price}` : 'Negotiate',
-    name, phone, address, payment,
-    status: 'pending',
-    createdAt: Date.now(),
-    expiresAt: Date.now() + 60 * 60 * 1000
-  };
-  saveOrder(order);
-  showOrderStatus(order);
-}
-
-function setTaskExample(text) {
-  document.getElementById('t-description').value = text;
-}
-
-function saveOrder(order) {
-  const orders = getOrders();
-  orders[order.id] = order;
-  localStorage.setItem('sydenham_orders', JSON.stringify(orders));
-  localStorage.setItem('sydenham_last_order', order.id);
-  localStorage.setItem('sydenham_my_orders', JSON.stringify(
-    [...(JSON.parse(localStorage.getItem('sydenham_my_orders') || '[]')), order.id]
-  ));
-}
-
-function getOrders() {
-  return JSON.parse(localStorage.getItem('sydenham_orders') || '{}');
-}
-
-function getOrder(id) {
-  return getOrders()[id] || null;
-}
-
-function checkExpiredOrders() {
-  const orders = getOrders();
-  let changed = false;
-  Object.values(orders).forEach(o => {
-    if (o.status === 'pending' && Date.now() > o.expiresAt) {
-      orders[o.id].status = 'rejected';
-      orders[o.id].rejectionReason = 'No response within 1 hour';
-      changed = true;
-    }
+  const orderId=generateOrderId();
+  const order={...pendingOrder,id:orderId,status:'pending',createdAt:Date.now(),expiresAt:Date.now()+60*60*1000};
+  waitForFirebase(()=>{
+    const r=window._fbRef(window._fbDb,'orders/'+orderId);
+    window._fbSet(r,order).then(()=>{
+      saveMyOrderId(orderId);
+      watchOrderStatus(orderId,order);
+      showOrderStatus(order);
+    }).catch(e=>{showToast('Error saving order. Check connection.');console.error(e)});
   });
-  if (changed) localStorage.setItem('sydenham_orders', JSON.stringify(orders));
 }
 
-function showOrderStatus(order) {
-  checkExpiredOrders();
-  const fresh = getOrder(order.id) || order;
-  const statusMap = {
-    pending: { icon: '⏳', label: 'Pending', class: 'pending', msg: 'Your order has been sent! Waiting for the errand boy to accept it.' },
-    accepted: { icon: '✅', label: 'Accepted!', class: 'accepted', msg: 'Great news! Your order has been accepted. Get ready!' },
-    'on-the-way': { icon: '🛵', label: 'On the Way!', class: 'accepted', msg: 'Your errand boy is heading to you now!' },
-    rejected: { icon: '❌', label: 'Not Accepted', class: 'rejected', msg: 'Sorry, this order could not be fulfilled at this time.' }
-  };
-  const st = statusMap[fresh.status] || statusMap.pending;
+function submitTask(){
+  const desc=document.getElementById('t-description').value.trim();
+  const name=document.getElementById('t-name').value.trim();
+  const phone=document.getElementById('t-phone').value.trim();
+  const address=document.getElementById('t-address').value.trim();
+  if(!desc){showToast('Please describe what you need done');return}
+  if(!name){showToast('Please enter your name');return}
+  if(!phone){showToast('Please enter your phone number');return}
+  if(!address){showToast('Please enter your address');return}
+  const orderId=generateOrderId();
+  const order={id:orderId,type:'task',description:desc,taskLocation:document.getElementById('t-location').value,offeredPrice:document.getElementById('t-price').value?`R${document.getElementById('t-price').value}`:'Negotiate',name,phone,address,payment:document.getElementById('t-payment').value,status:'pending',createdAt:Date.now(),expiresAt:Date.now()+60*60*1000};
+  waitForFirebase(()=>{
+    const r=window._fbRef(window._fbDb,'orders/'+orderId);
+    window._fbSet(r,order).then(()=>{
+      saveMyOrderId(orderId);
+      watchOrderStatus(orderId,order);
+      showOrderStatus(order);
+    }).catch(e=>{showToast('Error saving order.');console.error(e)});
+  });
+}
 
-  const steps = [
-    { label: 'Order Placed', sub: 'We received your order', done: true },
-    { label: 'Order Accepted', sub: 'Errand boy confirmed', done: ['accepted','on-the-way'].includes(fresh.status), active: fresh.status === 'pending' },
-    { label: 'Shopping / Task in Progress', sub: fresh.type === 'task' ? 'Task being handled' : `Heading to ${fresh.storeName || 'store'}`, done: fresh.status === 'on-the-way' },
-    { label: 'At Your Gate', sub: 'Items delivered!', done: false }
+function setTaskExample(text){document.getElementById('t-description').value=text}
+
+function saveMyOrderId(id){
+  const ids=JSON.parse(localStorage.getItem('my_order_ids')||'[]');
+  ids.push(id);
+  localStorage.setItem('my_order_ids',JSON.stringify(ids));
+}
+
+function watchOrderStatus(id,fallback){
+  if(statusWatcher) statusWatcher();
+  waitForFirebase(()=>{
+    const r=window._fbRef(window._fbDb,'orders/'+id);
+    statusWatcher=window._fbOnValue(r,snap=>{
+      const data=snap.val();
+      if(data) showOrderStatus(data);
+    });
+  });
+}
+
+function showOrderStatus(order){
+  const statusMap={pending:{icon:'⏳',label:'Pending',cls:'pending',msg:'Your order has been sent! Waiting for the errand boy to accept it.'},accepted:{icon:'✅',label:'Accepted!',cls:'accepted',msg:'Great news! Your order has been accepted. Get ready!'},'on-the-way':{icon:'🛵',label:'On the Way!',cls:'accepted',msg:'Your errand boy is heading to you now!'},rejected:{icon:'❌',label:'Not Accepted',cls:'rejected',msg:'Sorry, this order could not be fulfilled at this time.'},delivered:{icon:'🎉',label:'Delivered!',cls:'accepted',msg:'Your order has been delivered. Enjoy!'}};
+  const st=statusMap[order.status]||statusMap.pending;
+  const steps=[
+    {label:'Order Placed',sub:'We received your order',done:true},
+    {label:'Order Accepted',sub:'Errand boy confirmed',done:['accepted','on-the-way','delivered'].includes(order.status),active:order.status==='pending'},
+    {label:'Shopping / On the Way',sub:order.type==='task'?'Task being handled':`Heading to ${order.storeName||'store'}`,done:['on-the-way','delivered'].includes(order.status)},
+    {label:'At Your Gate',sub:'Items delivered!',done:order.status==='delivered'}
   ];
-
-  document.getElementById('status-content').innerHTML = `
-    <div class="status-icon ${st.class}">${st.icon}</div>
+  document.getElementById('status-content').innerHTML=`
+    <div class="status-icon ${st.cls}">${st.icon}</div>
     <p class="status-title">${st.label}</p>
     <p class="status-sub">${st.msg}</p>
-    <div class="order-id-box">
-      <p>Order ID</p>
-      <strong>${fresh.id}</strong>
+    <div class="order-id-box"><p>Order ID</p><strong>${order.id}</strong></div>
+    <div class="delivery-info-bar"><span>🕐</span><p><strong>Estimated arrival:</strong> ${order.type!=='task'?(STORES[order.store]||{}).time||'~30 min':'Depends on task'}</p></div>
+    <div class="tracker"><p style="font-size:13px;font-weight:600;margin-bottom:12px">Order Progress</p>
+    ${steps.map((s,i)=>`<div><div class="tracker-step"><div class="tracker-dot ${s.done?'done':s.active?'active':''}">${s.done?'✓':i+1}</div><div class="tracker-info"><h4>${s.label}</h4><p>${s.sub}</p></div></div>${i<steps.length-1?`<div class="tracker-line ${s.done?'done':''}"></div>`:''}</div>`).join('')}
     </div>
-    <div class="delivery-info-bar">
-      <span>🕐</span>
-      <p><strong>Estimated arrival:</strong> ${fresh.type !== 'task' ? (STORES[fresh.store] || {}).time || '~30 min' : 'Depends on task'}</p>
-    </div>
-    <div class="tracker">
-      <p style="font-size:13px;font-weight:600;margin-bottom:12px">Order Progress</p>
-      ${steps.map((s, i) => `
-        <div>
-          <div class="tracker-step">
-            <div class="tracker-dot ${s.done ? 'done' : s.active ? 'active' : ''}">
-              ${s.done ? '✓' : i + 1}
-            </div>
-            <div class="tracker-info">
-              <h4>${s.label}</h4>
-              <p>${s.sub}</p>
-            </div>
-          </div>
-          ${i < steps.length - 1 ? `<div class="tracker-line ${s.done ? 'done' : ''}"></div>` : ''}
-        </div>
-      `).join('')}
-    </div>
-    ${fresh.status === 'pending' ? `<p style="text-align:center;font-size:12px;color:var(--muted);margin-bottom:8px">This order will expire in 1 hour if not accepted.</p>` : ''}
-    <button class="btn btn-outline" onclick="refreshStatus('${fresh.id}')">🔄 Refresh Status</button>
+    ${order.extensionNote?`<div class="info-box"><p>⏱️ <strong>Time extended:</strong> ${order.extensionNote}</p></div>`:''}
+    ${order.status==='pending'?`<p style="text-align:center;font-size:12px;color:var(--muted);margin-bottom:8px">This order will expire in 1 hour if not accepted.</p>`:''}
   `;
   showPage('status');
 }
 
-function refreshStatus(id) {
-  checkExpiredOrders();
-  const order = getOrder(id);
-  if (order) showOrderStatus(order);
-  else showToast('Order not found');
-}
-
-function trackOrder() {
-  const id = document.getElementById('track-input').value.trim().toUpperCase();
-  checkExpiredOrders();
-  const order = getOrder(id);
-  const result = document.getElementById('track-result');
-  if (!order) {
-    result.innerHTML = `<div class="info-box"><p>❌ Order <strong>${id}</strong> not found. Check the ID and try again.</p></div>`;
-    return;
-  }
-  const statusMap = {
-    pending: { color: '#F59E0B', label: '⏳ Pending — waiting for acceptance' },
-    accepted: { color: var_green, label: '✅ Accepted — errand boy confirmed' },
-    'on-the-way': { color: var_green, label: '🛵 On the way to you!' },
-    rejected: { color: '#E23B3B', label: '❌ Not accepted / Expired' }
-  };
-  const s = { pending: { color: '#F59E0B', label: '⏳ Pending' }, accepted: { color: '#2DAA6C', label: '✅ Accepted' }, 'on-the-way': { color: '#2DAA6C', label: '🛵 On the Way!' }, rejected: { color: '#E23B3B', label: '❌ Not Accepted' } };
-  const st = s[order.status] || s.pending;
-  result.innerHTML = `
-    <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:16px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <strong style="font-family:'Syne',sans-serif;font-size:16px">${order.id}</strong>
-        <span style="font-size:12px;font-weight:600;color:${st.color}">${st.label}</span>
-      </div>
-      <div class="order-summary-line"><span class="label">Type</span><span>${order.type === 'task' ? 'Task' : order.storeName}</span></div>
-      <div class="order-summary-line"><span class="label">Name</span><span>${order.name}</span></div>
-      <div class="order-summary-line"><span class="label">Address</span><span>${order.address}</span></div>
-      <div class="order-summary-line"><span class="label">Placed</span><span>${new Date(order.createdAt).toLocaleTimeString()}</span></div>
-      ${order.type !== 'task' ? `<div class="order-summary-line"><span class="label">Est. arrival</span><span>${(STORES[order.store]||{}).time || '—'}</span></div>` : ''}
-    </div>
-    <button class="btn btn-outline" onclick="trackOrder()">🔄 Refresh</button>
-  `;
-}
-
-function loadRecentOrders() {
-  checkExpiredOrders();
-  const myIds = JSON.parse(localStorage.getItem('sydenham_my_orders') || '[]');
-  const orders = getOrders();
-  const el = document.getElementById('recent-orders-list');
-  if (myIds.length === 0) {
-    el.innerHTML = `<div class="empty-state"><div class="icon">📭</div><p>No orders yet. Place your first order!</p></div>`;
-    return;
-  }
-  const statusIcons = { pending: '⏳', accepted: '✅', 'on-the-way': '🛵', rejected: '❌' };
-  el.innerHTML = myIds.slice().reverse().map(id => {
-    const o = orders[id];
-    if (!o) return '';
-    return `
-      <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:8px;cursor:pointer" onclick="showOrderStatus(${JSON.stringify(JSON.stringify(o)).slice(1,-1) ? '' : ''}getOrder('${id}'))">
-        <div style="display:flex;justify-content:space-between">
-          <strong style="font-size:14px">${o.id}</strong>
-          <span>${statusIcons[o.status] || '⏳'} ${o.status}</span>
-        </div>
-        <p style="font-size:12px;color:var(--muted);margin-top:4px">${o.type === 'task' ? 'Task' : o.storeName} · ${new Date(o.createdAt).toLocaleTimeString()}</p>
-      </div>
-    `;
-  }).join('');
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
-}
-
-// Auto-refresh status page every 30s if visible
-setInterval(() => {
-  const statusPage = document.getElementById('page-status');
-  if (statusPage.classList.contains('active')) {
-    const lastId = localStorage.getItem('sydenham_last_order');
-    if (lastId) refreshStatus(lastId);
-  }
-}, 30000);
-
-// Clean up orders older than 24 hours
-(function cleanOldOrders() {
-  const orders = getOrders();
-  const DAY = 24 * 60 * 60 * 1000;
-  let changed = false;
-  Object.keys(orders).forEach(id => {
-    if (Date.now() - orders[id].createdAt > DAY) { delete orders[id]; changed = true; }
+function trackOrder(){
+  const id=document.getElementById('track-input').value.trim().toUpperCase();
+  if(!id){showToast('Enter an order ID');return}
+  const result=document.getElementById('track-result');
+  result.innerHTML=`<div class="fb-loading">Looking up ${id}...</div>`;
+  waitForFirebase(()=>{
+    const r=window._fbRef(window._fbDb,'orders/'+id);
+    window._fbGet(r).then(snap=>{
+      const order=snap.val();
+      if(!order){result.innerHTML=`<div class="info-box"><p>❌ Order <strong>${id}</strong> not found. Check the ID and try again.</p></div>`;return}
+      const s={pending:{color:'#F59E0B',label:'⏳ Pending'},accepted:{color:'#2DAA6C',label:'✅ Accepted'},'on-the-way':{color:'#2DAA6C',label:'🛵 On the Way!'},rejected:{color:'#E23B3B',label:'❌ Not Accepted'},delivered:{color:'#2DAA6C',label:'🎉 Delivered'}};
+      const st=s[order.status]||s.pending;
+      result.innerHTML=`<div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:16px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><strong style="font-family:'Syne',sans-serif;font-size:16px">${order.id}</strong><span style="font-size:12px;font-weight:600;color:${st.color}">${st.label}</span></div><div class="order-summary-line"><span class="label">Type</span><span>${order.type==='task'?'Task':order.storeName}</span></div><div class="order-summary-line"><span class="label">Name</span><span>${order.name}</span></div><div class="order-summary-line"><span class="label">Address</span><span>${order.address}</span></div><div class="order-summary-line"><span class="label">Placed</span><span>${new Date(order.createdAt).toLocaleTimeString()}</span></div>${order.type!=='task'?`<div class="order-summary-line"><span class="label">Est. arrival</span><span>${(STORES[order.store]||{}).time||'—'}</span></div>`:''}</div><button class="btn btn-outline" onclick="trackOrder()">🔄 Refresh</button>`;
+    }).catch(()=>result.innerHTML=`<div class="info-box"><p>❌ Could not reach database. Check your connection.</p></div>`);
   });
-  if (changed) localStorage.setItem('sydenham_orders', JSON.stringify(orders));
-})();
+}
+
+function loadRecentOrders(){
+  const ids=JSON.parse(localStorage.getItem('my_order_ids')||'[]');
+  const el=document.getElementById('recent-orders-list');
+  if(ids.length===0){el.innerHTML=`<div class="empty-state"><div class="icon">📭</div><p>No orders yet. Place your first order!</p></div>`;return}
+  el.innerHTML=`<div class="fb-loading">Loading your orders...</div>`;
+  const statusIcons={pending:'⏳',accepted:'✅','on-the-way':'🛵',rejected:'❌',delivered:'🎉'};
+  waitForFirebase(()=>{
+    Promise.all(ids.slice().reverse().slice(0,10).map(id=>window._fbGet(window._fbRef(window._fbDb,'orders/'+id)))).then(snaps=>{
+      const html=snaps.map(snap=>{
+        const o=snap.val();
+        if(!o) return '';
+        return `<div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:8px;cursor:pointer" onclick="document.getElementById('track-input').value='${o.id}';trackOrder()"><div style="display:flex;justify-content:space-between"><strong style="font-size:14px">${o.id}</strong><span>${statusIcons[o.status]||'⏳'} ${o.status}</span></div><p style="font-size:12px;color:var(--muted);margin-top:4px">${o.type==='task'?'Task':o.storeName} · ${new Date(o.createdAt).toLocaleTimeString()}</p></div>`;
+      }).join('');
+      el.innerHTML=html||`<div class="empty-state"><div class="icon">📭</div><p>No orders found.</p></div>`;
+    });
+  });
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
 </script>
 </body>
 </html>
