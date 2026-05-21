@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ErrandBoy Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #F4712E; --orange-dark: #C95420; --orange-light: #FDE8D8;
+    --green: #2DAA6C; --green-dark: #1D7A4C; --green-light: #D4F0E3;
+    --red: #E23B3B; --red-light: #FCEAEA; --red-dark: #A32D2D;
+    --yellow: #F7C732; --yellow-light: #FEF9E5;
+    --dark: #1A1208; --text: #2C1F0E; --muted: #7A6552;
+    --surface: #FFFDF9; --surface2: #F5F0E8; --border: #E8DDD0;
+    --white: #FFFFFF; --radius: 14px; --radius-sm: 10px;
+    --blue: #3B82F6; --blue-light: #EFF6FF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-family: 'DM Sans', sans-serif; background: var(--surface2); color: var(--text); }
+
+  /* LOGIN */
+  #login-screen {
+    min-height: 100vh; display: flex; align-items: center;
+    justify-content: center; padding: 20px;
+    background: var(--dark);
+  }
+  .login-box {
+    background: var(--white); border-radius: 20px;
+    padding: 36px 28px; width: 100%; max-width: 360px;
+  }
+  .login-logo { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: var(--dark); margin-bottom: 4px; }
+  .login-logo span { color: var(--orange); }
+  .login-sub { font-size: 12px; color: var(--muted); margin-bottom: 24px; }
+  .login-box label { font-size: 12px; color: var(--muted); font-weight: 600; display: block; margin-bottom: 6px; }
+  .login-box input {
+    width: 100%; border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px 14px;
+    font-size: 14px; margin-bottom: 12px; outline: none;
+    font-family: 'DM Sans', sans-serif; transition: border-color 0.15s;
+  }
+  .login-box input:focus { border-color: var(--orange); }
+  .login-error { color: var(--red); font-size: 13px; margin-bottom: 10px; display: none; }
+  .btn { display: block; width: 100%; padding: 13px; border-radius: var(--radius); border: none; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.15s; text-align: center; }
+  .btn-primary { background: var(--orange); color: white; }
+  .btn-primary:hover { background: var(--orange-dark); }
+  .btn-green { background: var(--green); color: white; }
+  .btn-green:hover { background: var(--green-dark); }
+  .btn-red { background: var(--red); color: white; }
+  .btn-red:hover { background: var(--red-dark); }
+  .btn-outline { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
+  .btn-sm { padding: 8px 14px; font-size: 12px; width: auto; display: inline-block; }
+
+  /* ADMIN APP */
+  #admin-app { display: none; min-height: 100vh; }
+
+  /* TOPBAR */
+  .topbar {
+    background: var(--dark); padding: 14px 20px;
+    display: flex; align-items: center; gap: 12px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .topbar .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px; color: white; }
+  .topbar .logo span { color: var(--orange); }
+  .topbar .admin-tag { background: var(--orange); color: white; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; }
+  .topbar .logout-btn {
+    margin-left: auto; background: transparent; border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.7); padding: 6px 12px; border-radius: 20px;
+    font-size: 11px; cursor: pointer; font-family: 'DM Sans', sans-serif;
+  }
+  .live-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  /* STATS BAR */
+  .stats-bar {
+    background: var(--white); border-bottom: 1px solid var(--border);
+    padding: 14px 20px; display: flex; gap: 16px; overflow-x: auto;
+  }
+  .stat-pill {
+    background: var(--surface2); border-radius: 20px;
+    padding: 6px 14px; white-space: nowrap;
+    font-size: 12px; display: flex; align-items: center; gap: 6px;
+  }
+  .stat-pill .val { font-weight: 700; font-size: 14px; }
+  .stat-pill.orange { background: var(--orange-light); }
+  .stat-pill.green { background: var(--green-light); }
+  .stat-pill.red { background: var(--red-light); }
+
+  /* TABS */
+  .tabs {
+    display: flex; background: var(--white);
+    border-bottom: 1px solid var(--border); padding: 0 16px; gap: 4px;
+  }
+  .tab {
+    padding: 12px 14px; font-size: 13px; font-weight: 600;
+    color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent;
+    transition: all 0.15s; white-space: nowrap;
+  }
+  .tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+  .tab-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--red); color: white; border-radius: 50%;
+    width: 18px; height: 18px; font-size: 10px; font-weight: 700;
+    margin-left: 5px;
+  }
+
+  /* MAIN CONTENT */
+  .main { padding: 16px; max-width: 900px; margin: 0 auto; }
+
+  /* ORDER CARD */
+  .order-card {
+    background: var(--white); border: 1.5px solid var(--border);
+    border-radius: var(--radius); margin-bottom: 12px;
+    overflow: hidden; transition: box-shadow 0.15s;
+  }
+  .order-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+  .order-card.new-order { border-color: var(--orange); animation: newPulse 1.5s ease-out; }
+  @keyframes newPulse { 0%{box-shadow:0 0 0 0 rgba(244,113,46,0.4)} 70%{box-shadow:0 0 0 10px transparent} 100%{box-shadow:none} }
+
+  .order-header {
+    padding: 14px 16px; display: flex;
+    align-items: center; gap: 10px; border-bottom: 1px solid var(--border);
+  }
+  .store-badge {
+    padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
+  }
+  .order-id { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; }
+  .order-time { font-size: 11px; color: var(--muted); margin-left: auto; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .status-dot.pending { background: var(--yellow); }
+  .status-dot.accepted { background: var(--green); }
+  .status-dot.rejected { background: var(--red); }
+  .status-dot.on-the-way { background: var(--blue); }
+
+  .order-body { padding: 14px 16px; }
+  .order-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .meta-item { background: var(--surface2); border-radius: var(--radius-sm); padding: 8px 12px; }
+  .meta-item .key { font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .meta-item .val { font-size: 13px; font-weight: 500; margin-top: 2px; }
+
+  .items-list { margin-bottom: 12px; }
+  .item-row-display {
+    display: flex; justify-content: space-between;
+    font-size: 13px; padding: 5px 0; border-bottom: 1px dashed var(--border);
+  }
+  .item-row-display:last-child { border: none; }
+  .item-row-display .name { color: var(--text); }
+  .item-row-display .price { color: var(--muted); }
+
+  .order-actions { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px 16px; border-top: 1px solid var(--border); }
+
+  /* EXPIRY TIMER */
+  .expiry-bar {
+    background: var(--yellow-light); border-top: 1px solid var(--border);
+    padding: 8px 16px; display: flex; align-items: center; gap: 8px;
+  }
+  .expiry-bar .timer { font-weight: 700; font-size: 13px; color: var(--orange-dark); }
+  .expiry-bar .label { font-size: 12px; color: var(--muted); }
+  .expiry-bar.urgent { background: var(--red-light); }
+  .expiry-bar.urgent .timer { color: var(--red); }
+
+  /* DELIVERY TIME CONTROLS */
+  .delivery-settings {
+    background: var(--white); border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 18px; margin-bottom: 16px;
+  }
+  .delivery-settings h3 { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 12px; }
+  .time-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+  .time-row label { font-size: 13px; color: var(--muted); width: 120px; flex-shrink: 0; }
+  .time-row input[type=number] {
+    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    padding: 8px 12px; font-size: 14px; width: 80px; text-align: center;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .time-row span { font-size: 12px; color: var(--muted); }
+
+  /* NOTIFICATION */
+  .notification {
+    position: fixed; top: 70px; right: 16px; z-index: 200;
+    background: var(--dark); color: white; padding: 14px 18px;
+    border-radius: var(--radius); max-width: 300px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    transform: translateX(120%); transition: transform 0.3s;
+    border-left: 4px solid var(--orange);
+  }
+  .notification.show { transform: translateX(0); }
+  .notification h4 { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .notification p { font-size: 12px; color: rgba(255,255,255,0.7); }
+
+  /* EMPTY */
+  .empty { text-align: center; padding: 48px 20px; color: var(--muted); }
+  .empty .icon { font-size: 48px; margin-bottom: 12px; }
+  .empty p { font-size: 14px; }
+
+  /* MODAL */
+  .modal-bg {
+    position: fixed; inset: 0; background: rgba(26,18,8,0.6);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    padding: 20px;
+  }
+  .modal-bg.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--white); border-radius: 20px;
+    padding: 24px; width: 100%; max-width: 400px;
+    transform: scale(0.95); transition: transform 0.2s;
+  }
+  .modal-bg.open .modal { transform: scale(1); }
+  .modal h3 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+  .modal p { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+  .modal .form-group { margin-bottom: 12px; }
+  .modal label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 6px; font-weight: 600; }
+  .modal input, .modal select, .modal textarea {
+    width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    padding: 10px 12px; font-size: 14px; font-family: 'DM Sans', sans-serif; outline: none;
+  }
+  .modal input:focus, .modal select:focus { border-color: var(--orange); }
+  .modal .btn + .btn { margin-top: 8px; }
+
+  .section-label { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; display: block; }
+
+  .tag { display: inline-block; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .tag-pending { background: var(--yellow-light); color: #92400E; }
+  .tag-accepted { background: var(--green-light); color: var(--green-dark); }
+  .tag-rejected { background: var(--red-light); color: var(--red-dark); }
+  .tag-onway { background: var(--blue-light); color: #1E40AF; }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+  @media (min-width: 640px) {
+    .order-meta { grid-template-columns: repeat(3, 1fr); }
+    .main { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">Sydenham <span>ErrandBoy</span></div>
+    <div class="login-sub">Admin Dashboard — Operator Login</div>
+    <label>Username</label>
+    <input type="text" id="login-user" placeholder="admin" autocomplete="username">
+    <label>Password</label>
+    <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="login-error" id="login-error">Incorrect username or password.</div>
+    <button class="btn btn-primary" onclick="doLogin()">Log In →</button>
+    <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px">Default: admin / errandboy2024</p>
+  </div>
+</div>
+
+<!-- ADMIN APP -->
+<div id="admin-app">
+  <div class="topbar">
+    <div>
+      <div class="logo">ErrandBoy <span>Admin</span></div>
+    </div>
+    <div class="admin-tag">OPERATOR</div>
+    <div class="live-dot" title="Live polling"></div>
+    <button class="logout-btn" onclick="doLogout()">Logout</button>
+  </div>
+
+  <div class="stats-bar" id="stats-bar">
+    <div class="stat-pill orange"><span class="val" id="stat-pending">0</span> Pending</div>
+    <div class="stat-pill green"><span class="val" id="stat-accepted">0</span> Accepted</div>
+    <div class="stat-pill red"><span class="val" id="stat-rejected">0</span> Rejected</div>
+    <div class="stat-pill"><span class="val" id="stat-total">0</span> Total Today</div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" id="tab-pending" onclick="switchTab('pending')">
+      🔔 Incoming <span class="tab-badge" id="badge-pending" style="display:none">0</span>
+    </div>
+    <div class="tab" id="tab-active" onclick="switchTab('active')">🛵 Active</div>
+    <div class="tab" id="tab-all" onclick="switchTab('all')">📋 All Orders</div>
+    <div class="tab" id="tab-settings" onclick="switchTab('settings')">⚙️ Settings</div>
+  </div>
+
+  <div class="main">
+    <div id="view-pending"></div>
+    <div id="view-active" style="display:none"></div>
+    <div id="view-all" style="display:none"></div>
+    <div id="view-settings" style="display:none"></div>
+  </div>
+</div>
+
+<!-- REJECT MODAL -->
+<div class="modal-bg" id="reject-modal">
+  <div class="modal">
+    <h3>Reject Order ❌</h3>
+    <p>Why are you rejecting this order? The customer will be notified.</p>
+    <div class="form-group">
+      <label>Reason</label>
+      <select id="reject-reason">
+        <option value="Out of stock">Items out of stock at store</option>
+        <option value="Store closed">Store is closed</option>
+        <option value="Too far">Location too far</option>
+        <option value="Driver unavailable">No driver available right now</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Extra note (optional)</label>
+      <textarea id="reject-note" rows="2" placeholder="Add any extra info for the customer..."></textarea>
+    </div>
+    <button class="btn btn-red" onclick="confirmReject()">Confirm Rejection</button>
+    <button class="btn btn-outline" style="margin-top:8px" onclick="closeRejectModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- EXTEND MODAL -->
+<div class="modal-bg" id="extend-modal">
+  <div class="modal">
+    <h3>Extend Delivery Time ⏱️</h3>
+    <p>Give the customer a heads-up that it'll take a bit longer.</p>
+    <div class="form-group">
+      <label>Add extra time (minutes)</label>
+      <input type="number" id="extend-minutes" value="15" min="5" max="120">
+    </div>
+    <div class="form-group">
+      <label>Reason</label>
+      <select id="extend-reason">
+        <option value="Queue at store">Queue at the store</option>
+        <option value="Store busy">Store is busy</option>
+        <option value="Traffic">Traffic delays</option>
+        <option value="Item unavailable">Checking alternative item</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" onclick="confirmExtend()">Extend Time</button>
+    <button class="btn btn-outline" style="margin-top:8px" onclick="closeExtendModal()">Cancel</button>
+  </div>
+</div>
+
+<div class="notification" id="notif">
+  <h4 id="notif-title">New Order!</h4>
+  <p id="notif-body">A new order just came in.</p>
+</div>
+
+<script>
+const ADMIN_CREDS = { username: 'admin', password: 'errandboy2024' };
+let currentTab = 'pending';
+let rejectTargetId = null;
+let extendTargetId = null;
+let knownOrderIds = new Set();
+let deliverySettings = JSON.parse(localStorage.getItem('admin_delivery_settings') || '{"spar":30,"jumbo":60,"spaza":20,"expireMinutes":60}');
+
+function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  if (u === ADMIN_CREDS.username && p === ADMIN_CREDS.password) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-app').style.display = 'block';
+    startPolling();
+    renderAll();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
+function doLogout() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('admin-app').style.display = 'none';
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+  stopPolling();
+}
+
+let pollInterval = null;
+function startPolling() {
+  pollInterval = setInterval(() => { checkExpiredOrders(); renderAll(); }, 10000);
+}
+function stopPolling() { if (pollInterval) clearInterval(pollInterval); }
+
+function getOrders() { return JSON.parse(localStorage.getItem('sydenham_orders') || '{}'); }
+function saveOrders(orders) { localStorage.setItem('sydenham_orders', JSON.stringify(orders)); }
+
+function checkExpiredOrders() {
+  const orders = getOrders();
+  let changed = false;
+  const expireMs = (deliverySettings.expireMinutes || 60) * 60 * 1000;
+  Object.values(orders).forEach(o => {
+    if (o.status === 'pending' && Date.now() > o.createdAt + expireMs) {
+      orders[o.id].status = 'rejected';
+      orders[o.id].rejectionReason = 'Auto-expired: no response within ' + deliverySettings.expireMinutes + ' min';
+      changed = true;
+    }
+  });
+  if (changed) saveOrders(orders);
+}
+
+function getStats(orders) {
+  const today = new Date().toDateString();
+  return Object.values(orders).reduce((s, o) => {
+    if (new Date(o.createdAt).toDateString() === today) {
+      s.total++;
+      if (o.status === 'pending') s.pending++;
+      else if (o.status === 'accepted' || o.status === 'on-the-way') s.accepted++;
+      else if (o.status === 'rejected') s.rejected++;
+    }
+    return s;
+  }, { pending: 0, accepted: 0, rejected: 0, total: 0 });
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.querySelectorAll('[id^=view-]').forEach(v => v.style.display = 'none');
+  document.getElementById('view-' + tab).style.display = 'block';
+  renderTab(tab);
+}
+
+function renderAll() {
+  checkExpiredOrders();
+  const orders = getOrders();
+  const stats = getStats(orders);
+  document.getElementById('stat-pending').textContent = stats.pending;
+  document.getElementById('stat-accepted').textContent = stats.accepted;
+  document.getElementById('stat-rejected').textContent = stats.rejected;
+  document.getElementById('stat-total').textContent = stats.total;
+
+  const pendingCount = Object.values(orders).filter(o => o.status === 'pending').length;
+  const badge = document.getElementById('badge-pending');
+  if (pendingCount > 0) { badge.style.display = 'inline-flex'; badge.textContent = pendingCount; }
+  else badge.style.display = 'none';
+
+  // Check for new orders
+  Object.values(orders).forEach(o => {
+    if (!knownOrderIds.has(o.id)) {
+      knownOrderIds.add(o.id);
+      if (knownOrderIds.size > 1) showNotif('🔔 New Order!', `${o.id} from ${o.name}`);
+    }
+  });
+  if (knownOrderIds.size === 0) Object.keys(orders).forEach(id => knownOrderIds.add(id));
+
+  renderTab(currentTab);
+}
+
+function renderTab(tab) {
+  if (tab === 'pending') renderPending();
+  else if (tab === 'active') renderActive();
+  else if (tab === 'all') renderAllOrders();
+  else if (tab === 'settings') renderSettings();
+}
+
+function renderPending() {
+  const orders = Object.values(getOrders()).filter(o => o.status === 'pending').sort((a, b) => b.createdAt - a.createdAt);
+  const el = document.getElementById('view-pending');
+  if (orders.length === 0) {
+    el.innerHTML = `<div class="empty"><div class="icon">✅</div><p>No pending orders right now.<br>You're all caught up!</p></div>`;
+    return;
+  }
+  el.innerHTML = orders.map(o => orderCard(o, true)).join('');
+}
+
+function renderActive() {
+  const orders = Object.values(getOrders()).filter(o => o.status === 'accepted' || o.status === 'on-the-way').sort((a, b) => b.createdAt - a.createdAt);
+  const el = document.getElementById('view-active');
+  if (orders.length === 0) {
+    el.innerHTML = `<div class="empty"><div class="icon">🛵</div><p>No active deliveries right now.</p></div>`;
+    return;
+  }
+  el.innerHTML = orders.map(o => orderCard(o, false)).join('');
+}
+
+function renderAllOrders() {
+  const orders = Object.values(getOrders()).sort((a, b) => b.createdAt - a.createdAt);
+  const el = document.getElementById('view-all');
+  if (orders.length === 0) {
+    el.innerHTML = `<div class="empty"><div class="icon">📭</div><p>No orders yet today.</p></div>`;
+    return;
+  }
+  el.innerHTML = orders.map(o => orderCard(o, false)).join('');
+}
+
+function renderSettings() {
+  const el = document.getElementById('view-settings');
+  el.innerHTML = `
+    <div class="delivery-settings">
+      <h3>⏱️ Delivery Time Estimates</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px">These are shown to customers on the order page. You can update them here anytime.</p>
+      <div class="time-row">
+        <label>Spar</label>
+        <input type="number" id="set-spar" value="${deliverySettings.spar}" min="5">
+        <span>minutes</span>
+      </div>
+      <div class="time-row">
+        <label>Jumbo</label>
+        <input type="number" id="set-jumbo" value="${deliverySettings.jumbo}" min="5">
+        <span>minutes</span>
+      </div>
+      <div class="time-row">
+        <label>Spaza / Local</label>
+        <input type="number" id="set-spaza" value="${deliverySettings.spaza}" min="5">
+        <span>minutes</span>
+      </div>
+      <hr>
+      <h3>⏳ Auto-Reject Timer</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Orders not accepted within this time will be automatically rejected.</p>
+      <div class="time-row">
+        <label>Expires after</label>
+        <input type="number" id="set-expire" value="${deliverySettings.expireMinutes}" min="10">
+        <span>minutes</span>
+      </div>
+      <br>
+      <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+    </div>
+
+    <div class="delivery-settings">
+      <h3>🛵 Delivery Fee Reference</h3>
+      <p style="font-size:13px;color:var(--muted)">Spar: <strong>R10</strong> · Jumbo: <strong>R20</strong> · Spaza: <strong>R10</strong></p>
+    </div>
+
+    <div class="delivery-settings">
+      <h3>🗑️ Data Management</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Orders older than 24 hours are deleted automatically. Use the button below to clear all current data.</p>
+      <button class="btn btn-outline" onclick="clearAllOrders()">Clear All Orders</button>
+    </div>
+  `;
+}
+
+function saveSettings() {
+  deliverySettings = {
+    spar: parseInt(document.getElementById('set-spar').value) || 30,
+    jumbo: parseInt(document.getElementById('set-jumbo').value) || 60,
+    spaza: parseInt(document.getElementById('set-spaza').value) || 20,
+    expireMinutes: parseInt(document.getElementById('set-expire').value) || 60
+  };
+  localStorage.setItem('admin_delivery_settings', JSON.stringify(deliverySettings));
+  showNotif('✅ Saved', 'Delivery settings updated.');
+}
+
+function clearAllOrders() {
+  if (confirm('Clear ALL orders? This cannot be undone.')) {
+    localStorage.removeItem('sydenham_orders');
+    localStorage.removeItem('sydenham_my_orders');
+    renderAll();
+  }
+}
+
+const STORE_COLORS = { spar: '#E31837', jumbo: '#B8860B', spaza: '#1D7A4C', task: '#C95420' };
+const STORE_BG = { spar: '#FDE8E8', jumbo: '#FEF9E5', spaza: '#D4F0E3', task: '#FDE8D8' };
+const STATUS_TAG = { pending: 'tag-pending', accepted: 'tag-accepted', rejected: 'tag-rejected', 'on-the-way': 'tag-onway' };
+const STATUS_LABEL = { pending: '⏳ Pending', accepted: '✅ Accepted', rejected: '❌ Rejected', 'on-the-way': '🛵 On the Way' };
+
+function timeAgo(ts) {
+  const diff = Math.floor((Date.now() - ts) / 1000);
+  if (diff < 60) return diff + 's ago';
+  if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+  return Math.floor(diff / 3600) + 'h ago';
+}
+
+function timeLeft(expiresAt, createdAt, expireMinutes) {
+  const expMs = expiresAt || (createdAt + expireMinutes * 60 * 1000);
+  const left = Math.max(0, Math.floor((expMs - Date.now()) / 1000));
+  const m = Math.floor(left / 60), s = left % 60;
+  return { label: `${m}m ${s}s`, urgent: left < 600, expired: left <= 0 };
+}
+
+function orderCard(o, showExpiry) {
+  const storeKey = o.type === 'task' ? 'task' : (o.store || 'spar');
+  const storeColor = STORE_COLORS[storeKey] || '#333';
+  const storeBg = STORE_BG[storeKey] || '#f0f0f0';
+
+  const items = o.type === 'task' ? [] : (o.items || []);
+  const items2 = o.type !== 'task' && o.option === 'over100' ? (o.items || []) : [];
+
+  const itemsHtml = (o.type === 'task') ? `
+    <div style="margin-bottom:12px">
+      <div class="section-label">Task Description</div>
+      <p style="font-size:13px;line-height:1.6">${o.description || ''}</p>
+      ${o.taskLocation ? `<p style="font-size:12px;color:var(--muted);margin-top:6px">📍 ${o.taskLocation}</p>` : ''}
+      ${o.offeredPrice ? `<p style="font-size:13px;font-weight:600;margin-top:6px">💰 Offering: ${o.offeredPrice}</p>` : ''}
+    </div>
+  ` : (items.length ? `
+    <div class="items-list">
+      <div class="section-label">Shopping List</div>
+      ${items.map(i => `
+        <div class="item-row-display">
+          <span class="name">${i.name}</span>
+          <span class="price">~R${parseFloat(i.price||0).toFixed(2)}</span>
+        </div>
+      `).join('')}
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-weight:700;font-size:13px">
+        <span>Est. Total</span>
+        <span>R${o.estimatedTotal ? parseFloat(o.estimatedTotal).toFixed(2) : '0.00'}</span>
+      </div>
+    </div>
+  ` : '');
+
+  const expiryMs = o.expiresAt || (o.createdAt + (deliverySettings.expireMinutes || 60) * 60 * 1000);
+  const tl = timeLeft(expiryMs, o.createdAt, deliverySettings.expireMinutes);
+  const expiryBar = (showExpiry && o.status === 'pending') ? `
+    <div class="expiry-bar ${tl.urgent ? 'urgent' : ''}">
+      <span>⏰</span>
+      <span class="label">Expires in</span>
+      <span class="timer" id="timer-${o.id}">${tl.label}</span>
+    </div>
+  ` : '';
+
+  const actions = () => {
+    if (o.status === 'pending') return `
+      <button class="btn btn-green btn-sm" onclick="acceptOrder('${o.id}')">✓ Accept</button>
+      <button class="btn btn-red btn-sm" onclick="openRejectModal('${o.id}')">✕ Reject</button>
+    `;
+    if (o.status === 'accepted') return `
+      <button class="btn btn-primary btn-sm" onclick="markOnTheWay('${o.id}')">🛵 Mark On the Way</button>
+      <button class="btn btn-outline btn-sm" onclick="openExtendModal('${o.id}')">⏱️ Extend Time</button>
+      <button class="btn btn-red btn-sm" onclick="openRejectModal('${o.id}')">Cancel</button>
+    `;
+    if (o.status === 'on-the-way') return `
+      <button class="btn btn-green btn-sm" onclick="markDelivered('${o.id}')">✅ Mark Delivered</button>
+      <button class="btn btn-outline btn-sm" onclick="openExtendModal('${o.id}')">⏱️ Extend Time</button>
+    `;
+    return `<span style="font-size:12px;color:var(--muted)">${o.rejectionReason || ''}</span>`;
+  };
+
+  return `
+    <div class="order-card ${o.status === 'pending' ? 'new-order' : ''}" id="card-${o.id}">
+      <div class="order-header">
+        <div class="status-dot ${o.status}"></div>
+        <span class="order-id">${o.id}</span>
+        <span class="store-badge" style="background:${storeBg};color:${storeColor}">
+          ${o.type === 'task' ? '⚡ Task' : o.storeName || o.store}
+        </span>
+        <span class="tag ${STATUS_TAG[o.status] || 'tag-pending'}">${STATUS_LABEL[o.status] || 'Pending'}</span>
+        <span class="order-time">${timeAgo(o.createdAt)}</span>
+      </div>
+      <div class="order-body">
+        <div class="order-meta">
+          <div class="meta-item"><div class="key">Customer</div><div class="val">${o.name}</div></div>
+          <div class="meta-item"><div class="key">Phone</div><div class="val"><a href="tel:${o.phone}" style="color:var(--orange)">${o.phone}</a></div></div>
+          <div class="meta-item"><div class="key">Address</div><div class="val">${o.address}</div></div>
+          ${o.landmark ? `<div class="meta-item"><div class="key">Landmark</div><div class="val">${o.landmark}</div></div>` : ''}
+          ${o.option ? `<div class="meta-item"><div class="key">Option</div><div class="val">${o.option === 'under100' ? 'Under R100 (pay at door)' : 'Over R100 (collect cash first)'}</div></div>` : ''}
+          ${o.payment ? `<div class="meta-item"><div class="key">Payment</div><div class="val">${o.payment}</div></div>` : ''}
+          ${o.location ? `<div class="meta-item"><div class="key">GPS</div><div class="val"><a href="https://maps.google.com/?q=${o.location.lat},${o.location.lng}" target="_blank" style="color:var(--orange)">Open Map 📍</a></div></div>` : ''}
+          ${o.deliveryFee ? `<div class="meta-item"><div class="key">Delivery Fee</div><div class="val" style="color:var(--orange-dark);font-weight:700">${o.deliveryFee}</div></div>` : ''}
+          ${o.extensionNote ? `<div class="meta-item" style="grid-column:1/-1;background:var(--yellow-light)"><div class="key">⏱️ Time Extended</div><div class="val">${o.extensionNote}</div></div>` : ''}
+          ${o.notes ? `<div class="meta-item" style="grid-column:1/-1"><div class="key">Notes</div><div class="val">${o.notes}</div></div>` : ''}
+        </div>
+        ${itemsHtml}
+      </div>
+      ${expiryBar}
+      <div class="order-actions">${actions()}</div>
+    </div>
+  `;
+}
+
+function acceptOrder(id) {
+  const orders = getOrders();
+  if (!orders[id]) return;
+  orders[id].status = 'accepted';
+  orders[id].acceptedAt = Date.now();
+  saveOrders(orders);
+  showNotif('✅ Accepted', `Order ${id} accepted.`);
+  renderAll();
+}
+
+function markOnTheWay(id) {
+  const orders = getOrders();
+  if (!orders[id]) return;
+  orders[id].status = 'on-the-way';
+  saveOrders(orders);
+  showNotif('🛵 On the Way', `Order ${id} marked on the way.`);
+  renderAll();
+}
+
+function markDelivered(id) {
+  const orders = getOrders();
+  if (!orders[id]) return;
+  orders[id].status = 'delivered';
+  saveOrders(orders);
+  showNotif('🎉 Delivered!', `Order ${id} completed.`);
+  renderAll();
+}
+
+function openRejectModal(id) {
+  rejectTargetId = id;
+  document.getElementById('reject-modal').classList.add('open');
+}
+function closeRejectModal() {
+  document.getElementById('reject-modal').classList.remove('open');
+  rejectTargetId = null;
+}
+function confirmReject() {
+  const reason = document.getElementById('reject-reason').value;
+  const note = document.getElementById('reject-note').value;
+  const orders = getOrders();
+  if (rejectTargetId && orders[rejectTargetId]) {
+    orders[rejectTargetId].status = 'rejected';
+    orders[rejectTargetId].rejectionReason = reason + (note ? ': ' + note : '');
+    saveOrders(orders);
+  }
+  closeRejectModal();
+  showNotif('❌ Rejected', `Order ${rejectTargetId} rejected.`);
+  renderAll();
+}
+
+function openExtendModal(id) {
+  extendTargetId = id;
+  document.getElementById('extend-modal').classList.add('open');
+}
+function closeExtendModal() {
+  document.getElementById('extend-modal').classList.remove('open');
+  extendTargetId = null;
+}
+function confirmExtend() {
+  const mins = parseInt(document.getElementById('extend-minutes').value) || 15;
+  const reason = document.getElementById('extend-reason').value;
+  const orders = getOrders();
+  if (extendTargetId && orders[extendTargetId]) {
+    orders[extendTargetId].expiresAt = (orders[extendTargetId].expiresAt || Date.now()) + mins * 60 * 1000;
+    orders[extendTargetId].extensionNote = `+${mins} min — ${reason}`;
+  }
+  saveOrders(orders);
+  closeExtendModal();
+  showNotif(`⏱️ Extended +${mins}min`, reason);
+  renderAll();
+}
+
+function showNotif(title, body) {
+  const n = document.getElementById('notif');
+  document.getElementById('notif-title').textContent = title;
+  document.getElementById('notif-body').textContent = body;
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 4000);
+}
+
+// Live countdown timers
+setInterval(() => {
+  const orders = getOrders();
+  Object.values(orders).filter(o => o.status === 'pending').forEach(o => {
+    const el = document.getElementById('timer-' + o.id);
+    if (el) {
+      const expiryMs = o.expiresAt || (o.createdAt + (deliverySettings.expireMinutes || 60) * 60 * 1000);
+      const tl = timeLeft(expiryMs, o.createdAt, deliverySettings.expireMinutes);
+      el.textContent = tl.label;
+      const bar = el.closest('.expiry-bar');
+      if (bar) bar.classList.toggle('urgent', tl.urgent);
+      if (tl.expired) renderAll();
+    }
+  });
+}, 1000);
+
+// Initial load
+window.onload = () => {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('admin-app').style.display = 'none';
+};
+</script>
+</body>
+</html>
