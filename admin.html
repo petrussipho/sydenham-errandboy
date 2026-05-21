@@ -6,137 +6,160 @@
 <title>ErrandBoy Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root{--orange:#F4712E;--orange-dark:#C95420;--orange-light:#FDE8D8;--green:#2DAA6C;--green-dark:#1D7A4C;--green-light:#D4F0E3;--red:#E23B3B;--red-light:#FCEAEA;--red-dark:#A32D2D;--yellow:#F7C732;--yellow-light:#FEF9E5;--dark:#1A1208;--text:#2C1F0E;--muted:#7A6552;--surface:#FFFDF9;--surface2:#F5F0E8;--border:#E8DDD0;--white:#FFFFFF;--radius:14px;--radius-sm:10px;--blue:#3B82F6;--blue-light:#EFF6FF}
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{font-family:'DM Sans',sans-serif;background:var(--surface2);color:var(--text)}
-  #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--dark)}
-  .login-box{background:var(--white);border-radius:20px;padding:36px 28px;width:100%;max-width:360px}
-  .login-logo{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--dark);margin-bottom:4px}
-  .login-logo span{color:var(--orange)}
-  .login-sub{font-size:12px;color:var(--muted);margin-bottom:24px}
-  .login-box label{font-size:12px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px}
-  .login-box input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-size:14px;margin-bottom:12px;outline:none;font-family:'DM Sans',sans-serif;transition:border-color .15s}
-  .login-box input:focus{border-color:var(--orange)}
-  .login-error{color:var(--red);font-size:13px;margin-bottom:10px;display:none}
-  .btn{display:block;width:100%;padding:13px;border-radius:var(--radius);border:none;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;text-align:center}
-  .btn-primary{background:var(--orange);color:white}
-  .btn-primary:hover{background:var(--orange-dark)}
-  .btn-green{background:var(--green);color:white}
-  .btn-green:hover{background:var(--green-dark)}
-  .btn-red{background:var(--red);color:white}
-  .btn-red:hover{background:var(--red-dark)}
-  .btn-outline{background:transparent;color:var(--text);border:1.5px solid var(--border)}
-  .btn-sm{padding:8px 14px;font-size:12px;width:auto;display:inline-block}
-  #admin-app{display:none;min-height:100vh}
-  .topbar{background:var(--dark);padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
-  .topbar .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:white}
-  .topbar .logo span{color:var(--orange)}
-  .admin-tag{background:var(--orange);color:white;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px}
-  .logout-btn{margin-left:auto;background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);padding:6px 12px;border-radius:20px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif}
-  .live-dot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-  .stats-bar{background:var(--white);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;gap:16px;overflow-x:auto}
-  .stat-pill{background:var(--surface2);border-radius:20px;padding:6px 14px;white-space:nowrap;font-size:12px;display:flex;align-items:center;gap:6px}
-  .stat-pill .val{font-weight:700;font-size:14px}
-  .stat-pill.orange{background:var(--orange-light)}
-  .stat-pill.green{background:var(--green-light)}
-  .stat-pill.red{background:var(--red-light)}
-  .tabs{display:flex;background:var(--white);border-bottom:1px solid var(--border);padding:0 16px;gap:4px;overflow-x:auto}
-  .tab{padding:12px 14px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
-  .tab.active{color:var(--orange);border-bottom-color:var(--orange)}
-  .tab-badge{display:inline-flex;align-items:center;justify-content:center;background:var(--red);color:white;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:700;margin-left:5px}
-  .main{padding:16px;max-width:900px;margin:0 auto}
-  .order-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;transition:box-shadow .15s}
-  .order-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.06)}
-  .order-card.new-pulse{border-color:var(--orange);animation:newPulse 2s ease-out}
-  @keyframes newPulse{0%{box-shadow:0 0 0 0 rgba(244,113,46,.5)}70%{box-shadow:0 0 0 12px transparent}100%{box-shadow:none}}
-  .order-header{padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);flex-wrap:wrap}
-  .store-badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}
-  .order-id{font-family:'Syne',sans-serif;font-size:15px;font-weight:800}
-  .order-time{font-size:11px;color:var(--muted);margin-left:auto}
-  .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-  .status-dot.pending{background:var(--yellow)}
-  .status-dot.accepted{background:var(--green)}
-  .status-dot.rejected{background:var(--red)}
-  .status-dot.on-the-way{background:var(--blue)}
-  .status-dot.delivered{background:var(--green)}
-  .order-body{padding:14px 16px}
-  .order-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-  .meta-item{background:var(--surface2);border-radius:var(--radius-sm);padding:8px 12px}
-  .meta-item .key{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-  .meta-item .val{font-size:13px;font-weight:500;margin-top:2px}
-  .items-list{margin-bottom:12px}
-  .item-row-d{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px dashed var(--border)}
-  .item-row-d:last-child{border:none}
-  .order-actions{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px;border-top:1px solid var(--border)}
-  .expiry-bar{background:var(--yellow-light);border-top:1px solid var(--border);padding:8px 16px;display:flex;align-items:center;gap:8px}
-  .expiry-bar .timer{font-weight:700;font-size:13px;color:var(--orange-dark)}
-  .expiry-bar.urgent{background:var(--red-light)}
-  .expiry-bar.urgent .timer{color:var(--red)}
-  .delivery-settings{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:16px}
-  .delivery-settings h3{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:12px}
-  .time-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
-  .time-row label{font-size:13px;color:var(--muted);width:120px;flex-shrink:0}
-  .time-row input[type=number]{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-size:14px;width:80px;text-align:center;font-family:'DM Sans',sans-serif}
-  .notification{position:fixed;top:70px;right:16px;z-index:200;background:var(--dark);color:white;padding:14px 18px;border-radius:var(--radius);max-width:300px;box-shadow:0 8px 24px rgba(0,0,0,.25);transform:translateX(120%);transition:transform .3s;border-left:4px solid var(--orange)}
-  .notification.show{transform:translateX(0)}
-  .notification h4{font-size:13px;font-weight:700;margin-bottom:4px}
-  .notification p{font-size:12px;color:rgba(255,255,255,.7)}
-  .empty{text-align:center;padding:48px 20px;color:var(--muted)}
-  .empty .icon{font-size:48px;margin-bottom:12px}
-  .modal-bg{position:fixed;inset:0;background:rgba(26,18,8,.6);display:flex;align-items:center;justify-content:center;z-index:300;opacity:0;pointer-events:none;transition:opacity .2s;padding:20px}
-  .modal-bg.open{opacity:1;pointer-events:all}
-  .modal{background:var(--white);border-radius:20px;padding:24px;width:100%;max-width:400px;transform:scale(.95);transition:transform .2s}
-  .modal-bg.open .modal{transform:scale(1)}
-  .modal h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:8px}
-  .modal p{font-size:13px;color:var(--muted);margin-bottom:16px}
-  .modal label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px;font-weight:600}
-  .modal select,.modal textarea,.modal input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:12px}
-  .modal select:focus,.modal input:focus{border-color:var(--orange)}
-  .section-label{font-size:11px;font-weight:600;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;display:block}
-  .tag{display:inline-block;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600}
-  .tag-pending{background:var(--yellow-light);color:#92400E}
-  .tag-accepted{background:var(--green-light);color:var(--green-dark)}
-  .tag-rejected{background:var(--red-light);color:var(--red-dark)}
-  .tag-onway{background:var(--blue-light);color:#1E40AF}
-  .tag-delivered{background:var(--green-light);color:var(--green-dark)}
-  hr{border:none;border-top:1px solid var(--border);margin:16px 0}
-  .sound-btn{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif}
-  @media(min-width:640px){.order-meta{grid-template-columns:repeat(3,1fr)}.main{padding:20px}}
+:root{--or:#F4712E;--ord:#C95420;--orl:#FDE8D8;--gr:#2DAA6C;--grd:#1D7A4C;--grl:#D4F0E3;--rd:#E23B3B;--rl:#FCEAEA;--rdd:#A32D2D;--ye:#F7C732;--yel:#FEF9E5;--dk:#1A1208;--tx:#2C1F0E;--mu:#7A6552;--su:#FFFDF9;--s2:#F5F0E8;--bd:#E8DDD0;--wh:#FFFFFF;--ra:14px;--rs:10px;--bl:#3B82F6;--bll:#EFF6FF}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-family:'DM Sans',sans-serif;background:var(--s2);color:var(--tx)}
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--dk)}
+.lbox{background:var(--wh);border-radius:20px;padding:34px 26px;width:100%;max-width:360px}
+.llogo{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;color:var(--dk);margin-bottom:3px}.llogo span{color:var(--or)}
+.lsub{font-size:12px;color:var(--mu);margin-bottom:22px}
+.lbox label{font-size:12px;color:var(--mu);font-weight:600;display:block;margin-bottom:5px}
+.lbox input{width:100%;border:1.5px solid var(--bd);border-radius:var(--rs);padding:11px 13px;font-size:14px;margin-bottom:11px;outline:none;font-family:'DM Sans',sans-serif;transition:border-color .15s}
+.lbox input:focus{border-color:var(--or)}
+.lerr{color:var(--rd);font-size:13px;margin-bottom:9px;display:none}
+.btn{display:block;width:100%;padding:12px;border-radius:var(--ra);border:none;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;text-align:center}
+.bp{background:var(--or);color:#fff}.bp:hover{background:var(--ord)}
+.bg{background:var(--gr);color:#fff}.bg:hover{background:var(--grd)}
+.brd{background:var(--rd);color:#fff}.brd:hover{background:var(--rdd)}
+.bo{background:transparent;color:var(--tx);border:1.5px solid var(--bd)}
+.bsm{padding:7px 13px;font-size:12px;width:auto;display:inline-block}
+.btn+.btn{margin-top:7px}
+#admin-app{display:none;min-height:100vh}
+.topbar{background:var(--dk);padding:13px 18px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:8px}
+.topbar .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:#fff}.topbar .logo span{color:var(--or)}
+.atag{background:var(--or);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px}
+.ldot{width:8px;height:8px;background:var(--gr);border-radius:50%;animation:pls 2s infinite}
+@keyframes pls{0%,100%{opacity:1}50%{opacity:.4}}
+.lgout{background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);padding:6px 11px;border-radius:20px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:auto}
+/* SITE STATUS TOGGLE in topbar */
+.site-tog{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 12px}
+.site-tog span{font-size:11px;color:rgba(255,255,255,.8);white-space:nowrap}
+.tog-btn{width:36px;height:20px;border-radius:10px;border:none;cursor:pointer;position:relative;transition:background .3s;flex-shrink:0}
+.tog-btn::after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .3s}
+.tog-btn.open{background:var(--gr)}.tog-btn.open::after{left:19px}
+.tog-btn.closed{background:var(--rd)}
+.statsbar{background:var(--wh);border-bottom:1px solid var(--bd);padding:12px 18px;display:flex;gap:14px;overflow-x:auto}
+.spill{background:var(--s2);border-radius:18px;padding:5px 13px;white-space:nowrap;font-size:12px;display:flex;align-items:center;gap:5px}
+.spill .v{font-weight:700;font-size:13px}
+.spill.sor{background:var(--orl)}.spill.sgr{background:var(--grl)}.spill.srd{background:var(--rl)}
+.tabs{display:flex;background:var(--wh);border-bottom:1px solid var(--bd);padding:0 14px;gap:3px;overflow-x:auto}
+.tab{padding:11px 13px;font-size:13px;font-weight:600;color:var(--mu);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.tab.active{color:var(--or);border-bottom-color:var(--or)}
+.tbadge{display:inline-flex;align-items:center;justify-content:center;background:var(--rd);color:#fff;border-radius:50%;width:17px;height:17px;font-size:9px;font-weight:700;margin-left:4px}
+.main{padding:14px;max-width:900px;margin:0 auto}
+.ocard{background:var(--wh);border:1.5px solid var(--bd);border-radius:var(--ra);margin-bottom:11px;overflow:hidden;transition:box-shadow .15s}
+.ocard:hover{box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.ocard.npulse{border-color:var(--or);animation:npls 2s ease-out}
+@keyframes npls{0%{box-shadow:0 0 0 0 rgba(244,113,46,.5)}70%{box-shadow:0 0 0 10px transparent}100%{box-shadow:none}}
+.ohd{padding:12px 15px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--bd);flex-wrap:wrap}
+.sbadge{padding:3px 9px;border-radius:18px;font-size:11px;font-weight:700}
+.oid{font-family:'Syne',sans-serif;font-size:14px;font-weight:800}
+.otm{font-size:11px;color:var(--mu);margin-left:auto}
+.sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sdot.pending{background:var(--ye)}.sdot.accepted{background:var(--gr)}.sdot.rejected{background:var(--rd)}.sdot.on-the-way{background:var(--bl)}.sdot.delivered{background:var(--gr)}.sdot.cancelled{background:var(--rd)}
+.obdy{padding:13px 15px}
+.ometa{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:11px}
+.mitem{background:var(--s2);border-radius:var(--rs);padding:7px 11px}
+.mitem .mk{font-size:10px;color:var(--mu);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.mitem .mv{font-size:13px;font-weight:500;margin-top:2px}
+.itmlist{margin-bottom:11px}
+.itrow{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px dashed var(--bd)}
+.itrow:last-child{border:none}
+/* Total in admin card */
+.atotal{background:var(--dk);border-radius:var(--rs);padding:11px 14px;margin-bottom:11px}
+.atr{display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.6);padding:2px 0}
+.atr.ag{color:#fff;font-weight:700;font-size:14px;border-top:1px solid rgba(255,255,255,.2);margin-top:5px;padding-top:6px}
+.oacts{display:flex;gap:7px;flex-wrap:wrap;padding:11px 15px;border-top:1px solid var(--bd)}
+.expbar{background:var(--yel);border-top:1px solid var(--bd);padding:7px 15px;display:flex;align-items:center;gap:7px}
+.expbar .etm{font-weight:700;font-size:12px;color:var(--ord)}
+.expbar.urg{background:var(--rl)}.expbar.urg .etm{color:var(--rd)}
+/* CHAT PANEL */
+.chatpanel{border-top:1px solid var(--bd);padding:0}
+.cphd{padding:10px 15px;background:var(--s2);border-bottom:1px solid var(--bd);font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+.cpmsgs{height:200px;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:6px;background:#fff}
+.msg{max-width:80%;padding:7px 10px;border-radius:12px;font-size:13px;line-height:1.5;word-break:break-word}
+.msg.them{background:var(--orl);color:var(--ord);border-bottom-left-radius:3px;align-self:flex-start}
+.msg.me{background:var(--s2);color:var(--tx);border-bottom-right-radius:3px;align-self:flex-end;border:1px solid var(--bd)}
+.msg .mt{font-size:10px;display:block;margin-top:2px;opacity:.6}
+.msg img{max-width:160px;border-radius:7px;display:block;margin-top:4px;cursor:pointer}
+.cpinp{display:flex;gap:6px;padding:8px;border-top:1px solid var(--bd);align-items:center;background:var(--wh)}
+.cpinp input{flex:1;border:1.5px solid var(--bd);border-radius:var(--rs);padding:8px 10px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none}
+.cpinp input:focus{border-color:var(--or)}
+.cpsnd{background:var(--or);border:none;border-radius:var(--rs);width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0}
+.cpimg{background:var(--s2);border:1.5px solid var(--bd);border-radius:var(--rs);width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0}
+/* DRIVER LOCATION SHARE */
+.drvloc{background:var(--grl);border:1.5px solid var(--gr);border-radius:var(--rs);padding:11px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.drvloc p{font-size:13px;color:var(--grd);flex:1}
+.drvloc button{background:var(--gr);color:#fff;border:none;border-radius:var(--rs);padding:7px 13px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
+/* SETTINGS */
+.scard{background:var(--wh);border:1.5px solid var(--bd);border-radius:var(--ra);padding:16px;margin-bottom:11px}
+.scard h3{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:11px}
+.trow2{display:flex;align-items:center;gap:9px;margin-bottom:9px;flex-wrap:wrap}
+.trow2 label{font-size:13px;color:var(--mu);width:110px;flex-shrink:0}
+.trow2 input[type=number]{border:1.5px solid var(--bd);border-radius:var(--rs);padding:7px 11px;font-size:14px;width:74px;text-align:center;font-family:'DM Sans',sans-serif;outline:none}
+.trow2 input:focus{border-color:var(--or)}
+/* SITE CLOSED CONTROL */
+.sitecard{background:var(--wh);border:1.5px solid var(--bd);border-radius:var(--ra);padding:16px;margin-bottom:11px}
+.sitecard h3{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:8px}
+.sitecard p{font-size:13px;color:var(--mu);margin-bottom:12px;line-height:1.5}
+.sitecard textarea{width:100%;border:1.5px solid var(--bd);border-radius:var(--rs);padding:10px 12px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;min-height:70px}
+.sitecard textarea:focus{border-color:var(--or)}
+.site-status-bar{background:var(--rd);color:#fff;padding:10px 18px;font-size:13px;font-weight:600;text-align:center}
+.site-status-bar.open{background:var(--gr)}
+/* NOTIFICATION */
+.notif{position:fixed;top:68px;right:14px;z-index:200;background:var(--dk);color:#fff;padding:13px 16px;border-radius:var(--ra);max-width:280px;box-shadow:0 8px 24px rgba(0,0,0,.25);transform:translateX(120%);transition:transform .3s;border-left:4px solid var(--or)}
+.notif.show{transform:translateX(0)}
+.notif h4{font-size:13px;font-weight:700;margin-bottom:3px}.notif p{font-size:12px;color:rgba(255,255,255,.7)}
+.empt{text-align:center;padding:44px 18px;color:var(--mu)}.empt .ei{font-size:44px;margin-bottom:10px}
+.slbl{font-size:11px;font-weight:600;letter-spacing:1.2px;color:var(--mu);text-transform:uppercase;margin-bottom:8px;display:block}
+.tag{display:inline-block;padding:3px 7px;border-radius:18px;font-size:10px;font-weight:600}
+.tp{background:var(--yel);color:#92400E}.ta{background:var(--grl);color:var(--grd)}.tj{background:var(--rl);color:var(--rdd)}.tow{background:var(--bll);color:#1E40AF}.td{background:var(--grl);color:var(--grd)}.tc{background:var(--rl);color:var(--rdd)}
+hr{border:none;border-top:1px solid var(--bd);margin:13px 0}
+/* Image viewer */
+.ivwr{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:500;display:none;align-items:center;justify-content:center}
+.ivwr img{max-width:95vw;max-height:90vh;border-radius:8px}
+.ivwr .ivcl{position:absolute;top:18px;right:18px;color:#fff;font-size:26px;cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif}
+@media(min-width:640px){.ometa{grid-template-columns:repeat(3,1fr)}.main{padding:18px}}
 </style>
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo">Sydenham <span>ErrandBoy</span></div>
-    <div class="login-sub">Admin Dashboard — Operator Login</div>
+  <div class="lbox">
+    <div class="llogo">Sydenham <span>ErrandBoy</span></div>
+    <div class="lsub">Admin Dashboard — Operator Login</div>
     <label>Username</label>
-    <input type="text" id="login-user" placeholder="admin" autocomplete="username">
+    <input type="text" id="lu" placeholder="admin" autocomplete="username">
     <label>Password</label>
-    <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
-    <div class="login-error" id="login-error">Incorrect username or password.</div>
-    <button class="btn btn-primary" onclick="doLogin()">Log In →</button>
-    <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px">Default: admin / errandboy2024</p>
+    <input type="password" id="lp" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="lerr" id="lerr">Incorrect username or password.</div>
+    <button class="btn bp" onclick="doLogin()">Log In →</button>
+    <p style="font-size:11px;color:var(--mu);text-align:center;margin-top:12px">Default: admin / errandboy2024</p>
   </div>
 </div>
 
+<!-- ADMIN APP -->
 <div id="admin-app">
+  <div id="site-status-bar" class="site-status-bar open">🟢 Site is OPEN — customers can place orders</div>
   <div class="topbar">
     <div><div class="logo">ErrandBoy <span>Admin</span></div></div>
-    <div class="admin-tag">OPERATOR</div>
-    <div class="live-dot" title="Live updates on"></div>
-    <button class="sound-btn" id="sound-btn" onclick="toggleSound()">🔔 Sound ON</button>
-    <button class="logout-btn" onclick="doLogout()">Logout</button>
+    <div class="atag">OPERATOR</div>
+    <div class="ldot"></div>
+    <div class="site-tog" id="site-tog">
+      <span id="tog-lbl">Site: OPEN</span>
+      <button class="tog-btn open" id="tog-btn" onclick="toggleSite()"></button>
+    </div>
+    <button class="lgout" onclick="doLogout()">Logout</button>
   </div>
-  <div class="stats-bar">
-    <div class="stat-pill orange"><span class="val" id="stat-pending">0</span> Pending</div>
-    <div class="stat-pill green"><span class="val" id="stat-accepted">0</span> Active</div>
-    <div class="stat-pill red"><span class="val" id="stat-rejected">0</span> Rejected</div>
-    <div class="stat-pill"><span class="val" id="stat-total">0</span> Today</div>
+  <div class="statsbar">
+    <div class="spill sor"><span class="v" id="sp">0</span> Pending</div>
+    <div class="spill sgr"><span class="v" id="sa">0</span> Active</div>
+    <div class="spill srd"><span class="v" id="sr">0</span> Rejected</div>
+    <div class="spill"><span class="v" id="st">0</span> Today</div>
   </div>
   <div class="tabs">
-    <div class="tab active" id="tab-pending" onclick="switchTab('pending')">🔔 Incoming <span class="tab-badge" id="badge-pending" style="display:none">0</span></div>
+    <div class="tab active" id="tab-pending" onclick="switchTab('pending')">🔔 Incoming <span class="tbadge" id="badge-p" style="display:none">0</span></div>
     <div class="tab" id="tab-active" onclick="switchTab('active')">🛵 Active</div>
     <div class="tab" id="tab-all" onclick="switchTab('all')">📋 All Orders</div>
     <div class="tab" id="tab-settings" onclick="switchTab('settings')">⚙️ Settings</div>
@@ -149,362 +172,433 @@
   </div>
 </div>
 
-<div class="modal-bg" id="reject-modal">
-  <div class="modal">
-    <h3>Reject Order ❌</h3>
-    <p>Why are you rejecting this order?</p>
-    <label>Reason</label>
-    <select id="reject-reason">
-      <option value="Out of stock">Items out of stock at store</option>
+<!-- MODALS -->
+<div style="position:fixed;inset:0;background:rgba(26,18,8,.6);display:flex;align-items:center;justify-content:center;z-index:300;opacity:0;pointer-events:none;transition:opacity .2s;padding:18px" id="rej-modal">
+  <div style="background:var(--wh);border-radius:18px;padding:22px;width:100%;max-width:380px;transform:scale(.95);transition:transform .2s" id="rej-box">
+    <h3 style="font-family:'Syne',sans-serif;font-size:17px;font-weight:800;margin-bottom:7px">Reject Order ❌</h3>
+    <p style="font-size:13px;color:var(--mu);margin-bottom:13px">Why are you rejecting this order?</p>
+    <label style="font-size:12px;color:var(--mu);display:block;margin-bottom:5px;font-weight:600">Reason</label>
+    <select id="rej-reason" style="width:100%;border:1.5px solid var(--bd);border-radius:var(--rs);padding:9px 11px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:10px">
+      <option value="Out of stock">Items out of stock</option>
       <option value="Store closed">Store is closed</option>
       <option value="Too far">Location too far</option>
-      <option value="Driver unavailable">No driver available right now</option>
+      <option value="Driver unavailable">No driver available</option>
       <option value="Other">Other</option>
     </select>
-    <label>Extra note (optional)</label>
-    <textarea id="reject-note" rows="2" placeholder="Any extra info for the customer..."></textarea>
-    <button class="btn btn-red" onclick="confirmReject()">Confirm Rejection</button>
-    <button class="btn btn-outline" style="margin-top:8px" onclick="closeModal('reject-modal')">Cancel</button>
+    <label style="font-size:12px;color:var(--mu);display:block;margin-bottom:5px;font-weight:600">Extra note (optional)</label>
+    <textarea id="rej-note" rows="2" style="width:100%;border:1.5px solid var(--bd);border-radius:var(--rs);padding:9px 11px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;resize:none;margin-bottom:13px" placeholder="Any info for the customer..."></textarea>
+    <button class="btn brd" onclick="confirmReject()">Confirm Rejection</button>
+    <button class="btn bo" style="margin-top:7px" onclick="closeModal('rej-modal')">Cancel</button>
   </div>
 </div>
 
-<div class="modal-bg" id="extend-modal">
-  <div class="modal">
-    <h3>Extend Delivery Time ⏱️</h3>
-    <p>Give the customer more time — they'll see the update live.</p>
-    <label>Add extra time (minutes)</label>
-    <input type="number" id="extend-minutes" value="15" min="5" max="120">
-    <label>Reason</label>
-    <select id="extend-reason">
+<div style="position:fixed;inset:0;background:rgba(26,18,8,.6);display:flex;align-items:center;justify-content:center;z-index:300;opacity:0;pointer-events:none;transition:opacity .2s;padding:18px" id="ext-modal">
+  <div style="background:var(--wh);border-radius:18px;padding:22px;width:100%;max-width:380px;transform:scale(.95);transition:transform .2s" id="ext-box">
+    <h3 style="font-family:'Syne',sans-serif;font-size:17px;font-weight:800;margin-bottom:7px">Extend Delivery Time ⏱️</h3>
+    <p style="font-size:13px;color:var(--mu);margin-bottom:13px">Customer sees this update in real time.</p>
+    <label style="font-size:12px;color:var(--mu);display:block;margin-bottom:5px;font-weight:600">Add extra time (minutes)</label>
+    <input type="number" id="ext-mins" value="15" min="5" max="120" style="width:100%;border:1.5px solid var(--bd);border-radius:var(--rs);padding:9px 11px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:10px">
+    <label style="font-size:12px;color:var(--mu);display:block;margin-bottom:5px;font-weight:600">Reason</label>
+    <select id="ext-reason" style="width:100%;border:1.5px solid var(--bd);border-radius:var(--rs);padding:9px 11px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:13px">
       <option value="Queue at store">Queue at the store</option>
       <option value="Store busy">Store is busy</option>
       <option value="Traffic">Traffic delays</option>
-      <option value="Checking alternative">Checking alternative item</option>
+      <option value="Item unavailable">Checking alternative item</option>
       <option value="Other">Other</option>
     </select>
-    <button class="btn btn-primary" onclick="confirmExtend()">Extend Time</button>
-    <button class="btn btn-outline" style="margin-top:8px" onclick="closeModal('extend-modal')">Cancel</button>
+    <button class="btn bp" onclick="confirmExtend()">Extend Time</button>
+    <button class="btn bo" style="margin-top:7px" onclick="closeModal('ext-modal')">Cancel</button>
   </div>
 </div>
 
-<div class="notification" id="notif">
-  <h4 id="notif-title">New Order!</h4>
-  <p id="notif-body">A new order just came in.</p>
+<div class="notif" id="notif"><h4 id="notif-t">New Order!</h4><p id="notif-b">A new order came in.</p></div>
+
+<div class="ivwr" id="ivwr" onclick="document.getElementById('ivwr').style.display='none'">
+  <button class="ivcl">✕</button>
+  <img id="ivimg" src="">
 </div>
 
-<!-- Firebase -->
+<input type="file" id="admin-img-file" accept="image/*" style="display:none">
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, get, update, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, set, get, update, onValue, push, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAB18k8GeWdC0v2c0C6CHS99CzIt7OXYBs",
-  authDomain: "sydenham-errandboy.firebaseapp.com",
-  databaseURL: "https://sydenham-errandboy-default-rtdb.firebaseio.com",
-  projectId: "sydenham-errandboy",
-  storageBucket: "sydenham-errandboy.firebasestorage.app",
-  messagingSenderId: "413060964375",
-  appId: "1:413060964375:web:cd83c85e9d44ae6557bc52",
-  measurementId: "G-45LKS37KDB"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-window._db = db;
-window._ref = ref;
-window._set = set;
-window._get = get;
-window._update = update;
-window._onValue = onValue;
-window._remove = remove;
-window._fbReady = true;
+const FC={apiKey:"AIzaSyAB18k8GeWdC0v2c0C6CHS99CzIt7OXYBs",authDomain:"sydenham-errandboy.firebaseapp.com",databaseURL:"https://sydenham-errandboy-default-rtdb.firebaseio.com",projectId:"sydenham-errandboy",storageBucket:"sydenham-errandboy.firebasestorage.app",messagingSenderId:"413060964375",appId:"1:413060964375:web:cd83c85e9d44ae6557bc52"};
+const app=initializeApp(FC);
+const db=getDatabase(app);
+window._db=db;window._ref=ref;window._set=set;window._get=get;
+window._update=update;window._onValue=onValue;window._push=push;
+window._remove=remove;window._fbReady=true;
 </script>
 
 <script>
-const ADMIN_CREDS = { username: 'ramasehla', password: 'Kh@nyile0132' };
-let currentTab = 'pending';
-let rejectTargetId = null;
-let extendTargetId = null;
-let knownIds = new Set();
-let soundEnabled = true;
-let liveWatcher = null;
-let allOrders = {};
-let deliverySettings = JSON.parse(localStorage.getItem('admin_settings') || '{"spar":30,"jumbo":60,"spaza":20,"expireMinutes":60}');
+const CREDS={user:'admin',pass:'errandboy2024'};
+let curTab='pending',rejId=null,extId=null,knownIds=new Set(),allOrds={},liveWatcher=null,chatWatchers={},siteOpen=true;
+let dSettings=JSON.parse(localStorage.getItem('eb_settings')||'{"spar":30,"jumbo":60,"spaza":20,"expireMinutes":60}');
 
-function waitForFb(cb) { if(window._fbReady) cb(); else setTimeout(()=>waitForFb(cb), 100); }
+function waitFb(cb){if(window._fbReady)cb();else setTimeout(()=>waitFb(cb),100)}
 
-function doLogin() {
-  const u = document.getElementById('login-user').value.trim();
-  const p = document.getElementById('login-pass').value;
-  if (u === ADMIN_CREDS.username && p === ADMIN_CREDS.password) {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-app').style.display = 'block';
-    startLiveListener();
+function doLogin(){
+  const u=document.getElementById('lu').value.trim();
+  const p=document.getElementById('lp').value;
+  if(u===CREDS.user&&p===CREDS.pass){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('admin-app').style.display='block';
+    startLive();
+    watchSiteStatus();
     switchTab('pending');
   } else {
-    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('lerr').style.display='block';
   }
 }
 
-function doLogout() {
-  if (liveWatcher) liveWatcher();
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('admin-app').style.display = 'none';
+function doLogout(){
+  if(liveWatcher)liveWatcher();
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('admin-app').style.display='none';
 }
 
-function toggleSound() {
-  soundEnabled = !soundEnabled;
-  document.getElementById('sound-btn').textContent = soundEnabled ? '🔔 Sound ON' : '🔕 Sound OFF';
-}
-
-function playBeep() {
-  if (!soundEnabled) return;
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.connect(g); g.connect(ctx.destination);
-    o.frequency.value = 880; g.gain.value = 0.3;
-    o.start(); o.stop(ctx.currentTime + 0.3);
-  } catch(e) {}
-}
-
-function startLiveListener() {
-  waitForFb(() => {
-    const r = window._ref(window._db, 'orders');
-    liveWatcher = window._onValue(r, snap => {
-      const data = snap.val() || {};
-      // Auto expire pending orders
-      const now = Date.now();
-      const expireMs = (deliverySettings.expireMinutes || 60) * 60 * 1000;
-      Object.values(data).forEach(o => {
-        if (o.status === 'pending' && now > (o.expiresAt || o.createdAt + expireMs)) {
-          window._update(window._ref(window._db, 'orders/' + o.id), { status: 'rejected', rejectionReason: 'Auto-expired: no response within ' + deliverySettings.expireMinutes + ' min' });
-          data[o.id].status = 'rejected';
-        }
-      });
-      // Detect new orders
-      Object.keys(data).forEach(id => {
-        if (!knownIds.has(id) && knownIds.size > 0) {
-          const o = data[id];
-          showNotif('🔔 New Order!', `${id} from ${o.name}`);
-          playBeep();
-        }
-        knownIds.add(id);
-      });
-      allOrders = data;
-      updateStats();
-      renderCurrentTab();
+function watchSiteStatus(){
+  waitFb(()=>{
+    window._onValue(window._ref(window._db,'siteStatus'),snap=>{
+      const d=snap.val()||{};
+      siteOpen=!d.closed;
+      const bar=document.getElementById('site-status-bar');
+      const togBtn=document.getElementById('tog-btn');
+      const togLbl=document.getElementById('tog-lbl');
+      if(d.closed){
+        bar.textContent='🔴 Site is CLOSED — customers see closed notice';
+        bar.className='site-status-bar';
+        togBtn.className='tog-btn closed';
+        togLbl.textContent='Site: CLOSED';
+      } else {
+        bar.textContent='🟢 Site is OPEN — customers can place orders';
+        bar.className='site-status-bar open';
+        togBtn.className='tog-btn open';
+        togLbl.textContent='Site: OPEN';
+      }
     });
   });
 }
 
-function updateStats() {
-  const today = new Date().toDateString();
-  let pending=0, accepted=0, rejected=0, total=0;
-  Object.values(allOrders).forEach(o => {
-    if (new Date(o.createdAt).toDateString() !== today) return;
-    total++;
-    if (o.status === 'pending') pending++;
-    else if (o.status === 'accepted' || o.status === 'on-the-way') accepted++;
-    else if (o.status === 'rejected') rejected++;
+function toggleSite(){
+  if(siteOpen){
+    const notice=prompt('Site will be CLOSED. Enter a message for customers (or leave blank for default):','We are not taking orders right now. Please check back soon!');
+    if(notice===null)return;
+    waitFb(()=>window._set(window._ref(window._db,'siteStatus'),{closed:true,notice:notice||'We are not taking orders right now. Please check back soon!'}));
+  } else {
+    if(!confirm('Re-open the site so customers can place orders?'))return;
+    waitFb(()=>window._set(window._ref(window._db,'siteStatus'),{closed:false,notice:''}));
+  }
+}
+
+function startLive(){
+  waitFb(()=>{
+    const r=window._ref(window._db,'orders');
+    liveWatcher=window._onValue(r,snap=>{
+      const data=snap.val()||{};
+      const expMs=(dSettings.expireMinutes||60)*60*1000;
+      const now=Date.now();
+      Object.values(data).forEach(o=>{
+        if(o.status==='pending'&&now>(o.expiresAt||o.createdAt+expMs)){
+          window._update(window._ref(window._db,'orders/'+o.id),{status:'rejected',rejectionReason:'Auto-expired: no response within '+dSettings.expireMinutes+' min'});
+          data[o.id].status='rejected';
+        }
+        if(!knownIds.has(o.id)&&knownIds.size>0&&o.status==='pending'){
+          showNotif('🔔 New Order!',`${o.id} from ${o.name}`);
+          playBeep();
+        }
+        knownIds.add(o.id);
+      });
+      allOrds=data;
+      updateStats();
+      renderCurTab();
+    });
   });
-  document.getElementById('stat-pending').textContent = pending;
-  document.getElementById('stat-accepted').textContent = accepted;
-  document.getElementById('stat-rejected').textContent = rejected;
-  document.getElementById('stat-total').textContent = total;
-  const badge = document.getElementById('badge-pending');
-  if (pending > 0) { badge.style.display='inline-flex'; badge.textContent=pending; }
-  else badge.style.display='none';
 }
 
-function switchTab(tab) {
-  currentTab = tab;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
-  document.querySelectorAll('[id^=view-]').forEach(v => v.style.display='none');
-  document.getElementById('view-' + tab).style.display = 'block';
-  renderCurrentTab();
+function updateStats(){
+  const today=new Date().toDateString();
+  let p=0,a=0,r=0,t=0;
+  Object.values(allOrds).forEach(o=>{
+    if(new Date(o.createdAt).toDateString()!==today)return;
+    t++;
+    if(o.status==='pending')p++;
+    else if(o.status==='accepted'||o.status==='on-the-way')a++;
+    else if(o.status==='rejected')r++;
+  });
+  document.getElementById('sp').textContent=p;
+  document.getElementById('sa').textContent=a;
+  document.getElementById('sr').textContent=r;
+  document.getElementById('st').textContent=t;
+  const b=document.getElementById('badge-p');
+  if(p>0){b.style.display='inline-flex';b.textContent=p}else b.style.display='none';
 }
 
-function renderCurrentTab() {
-  if (currentTab === 'pending') renderPending();
-  else if (currentTab === 'active') renderActive();
-  else if (currentTab === 'all') renderAll();
-  else if (currentTab === 'settings') renderSettings();
+function switchTab(tab){
+  curTab=tab;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.querySelectorAll('[id^=view-]').forEach(v=>v.style.display='none');
+  document.getElementById('view-'+tab).style.display='block';
+  renderCurTab();
 }
 
-function renderPending() {
-  const orders = Object.values(allOrders).filter(o => o.status === 'pending').sort((a,b) => b.createdAt - a.createdAt);
-  const el = document.getElementById('view-pending');
-  el.innerHTML = orders.length === 0 ? `<div class="empty"><div class="icon">✅</div><p>No pending orders. All caught up!</p></div>` : orders.map(o => orderCard(o)).join('');
-}
-function renderActive() {
-  const orders = Object.values(allOrders).filter(o => o.status==='accepted'||o.status==='on-the-way').sort((a,b) => b.createdAt - a.createdAt);
-  const el = document.getElementById('view-active');
-  el.innerHTML = orders.length === 0 ? `<div class="empty"><div class="icon">🛵</div><p>No active deliveries right now.</p></div>` : orders.map(o => orderCard(o)).join('');
-}
-function renderAll() {
-  const orders = Object.values(allOrders).sort((a,b) => b.createdAt - a.createdAt);
-  const el = document.getElementById('view-all');
-  el.innerHTML = orders.length === 0 ? `<div class="empty"><div class="icon">📭</div><p>No orders yet today.</p></div>` : orders.map(o => orderCard(o)).join('');
+function renderCurTab(){
+  if(curTab==='pending')renderPending();
+  else if(curTab==='active')renderActive();
+  else if(curTab==='all')renderAll();
+  else if(curTab==='settings')renderSettings();
 }
 
-const STORE_COLOR = { spar:'#E31837', jumbo:'#B8860B', spaza:'#1D7A4C', task:'#C95420' };
-const STORE_BG = { spar:'#FDE8E8', jumbo:'#FEF9E5', spaza:'#D4F0E3', task:'#FDE8D8' };
-const STATUS_TAG = { pending:'tag-pending', accepted:'tag-accepted', rejected:'tag-rejected', 'on-the-way':'tag-onway', delivered:'tag-delivered' };
-const STATUS_LABEL = { pending:'⏳ Pending', accepted:'✅ Accepted', rejected:'❌ Rejected', 'on-the-way':'🛵 On the Way', delivered:'🎉 Delivered' };
-
-function timeAgo(ts) {
-  const d=Math.floor((Date.now()-ts)/1000);
-  if(d<60) return d+'s ago';
-  if(d<3600) return Math.floor(d/60)+'m ago';
-  return Math.floor(d/3600)+'h ago';
+function renderPending(){
+  const ords=Object.values(allOrds).filter(o=>o.status==='pending').sort((a,b)=>b.createdAt-a.createdAt);
+  document.getElementById('view-pending').innerHTML=ords.length?ords.map(o=>orderCard(o)).join(''):`<div class="empt"><div class="ei">✅</div><p>No pending orders. All caught up!</p></div>`;
+}
+function renderActive(){
+  const ords=Object.values(allOrds).filter(o=>o.status==='accepted'||o.status==='on-the-way').sort((a,b)=>b.createdAt-a.createdAt);
+  document.getElementById('view-active').innerHTML=ords.length?ords.map(o=>orderCard(o)).join(''):`<div class="empt"><div class="ei">🛵</div><p>No active deliveries right now.</p></div>`;
+}
+function renderAll(){
+  const ords=Object.values(allOrds).sort((a,b)=>b.createdAt-a.createdAt);
+  document.getElementById('view-all').innerHTML=ords.length?ords.map(o=>orderCard(o)).join(''):`<div class="empt"><div class="ei">📭</div><p>No orders yet today.</p></div>`;
 }
 
-function orderCard(o) {
-  const sk = o.type==='task'?'task':(o.store||'spar');
-  const items = (o.items||[]);
-  const itemsHtml = o.type==='task' ? `<div style="margin-bottom:12px"><div class="section-label">Task</div><p style="font-size:13px;line-height:1.6">${o.description||''}</p>${o.taskLocation?`<p style="font-size:12px;color:var(--muted);margin-top:6px">📍 ${o.taskLocation}</p>`:''} ${o.offeredPrice?`<p style="font-size:13px;font-weight:600;margin-top:6px">💰 Offering: ${o.offeredPrice}</p>`:''}</div>`
-    : items.length ? `<div class="items-list"><div class="section-label">Shopping List</div>${items.map(i=>`<div class="item-row-d"><span>${i.name}</span><span style="color:var(--muted)">~R${parseFloat(i.price||0).toFixed(2)}</span></div>`).join('')}<div style="display:flex;justify-content:space-between;padding:6px 0;font-weight:700;font-size:13px"><span>Est. Total</span><span>R${parseFloat(o.estimatedTotal||0).toFixed(2)}</span></div></div>` : '';
-  const expiryMs = o.expiresAt || (o.createdAt + deliverySettings.expireMinutes*60*1000);
-  const left = Math.max(0,Math.floor((expiryMs - Date.now())/1000));
-  const m=Math.floor(left/60), s=left%60;
-  const expiryBar = o.status==='pending' ? `<div class="expiry-bar ${left<600?'urgent':''}" id="eb-${o.id}"><span>⏰</span><span style="font-size:12px;color:var(--muted)">Expires in</span><span class="timer" id="t-${o.id}">${m}m ${s}s</span></div>` : '';
-  const actions = o.status==='pending' ? `<button class="btn btn-green btn-sm" onclick="acceptOrder('${o.id}')">✓ Accept</button><button class="btn btn-red btn-sm" onclick="openReject('${o.id}')">✕ Reject</button>`
-    : o.status==='accepted' ? `<button class="btn btn-primary btn-sm" onclick="markOnWay('${o.id}')">🛵 On the Way</button><button class="btn btn-outline btn-sm" onclick="openExtend('${o.id}')">⏱️ Extend Time</button><button class="btn btn-red btn-sm" onclick="openReject('${o.id}')">Cancel</button>`
-    : o.status==='on-the-way' ? `<button class="btn btn-green btn-sm" onclick="markDelivered('${o.id}')">✅ Mark Delivered</button><button class="btn btn-outline btn-sm" onclick="openExtend('${o.id}')">⏱️ Extend</button>`
-    : `<span style="font-size:12px;color:var(--muted)">${o.rejectionReason||''}</span>`;
-  return `<div class="order-card ${o.status==='pending'?'new-pulse':''}">
-    <div class="order-header">
-      <div class="status-dot ${o.status}"></div>
-      <span class="order-id">${o.id}</span>
-      <span class="store-badge" style="background:${STORE_BG[sk]};color:${STORE_COLOR[sk]}">${o.type==='task'?'⚡ Task':o.storeName||o.store}</span>
-      <span class="tag ${STATUS_TAG[o.status]||'tag-pending'}">${STATUS_LABEL[o.status]||'Pending'}</span>
-      <span class="order-time">${timeAgo(o.createdAt)}</span>
-    </div>
-    <div class="order-body">
-      <div class="order-meta">
-        <div class="meta-item"><div class="key">Customer</div><div class="val">${o.name}</div></div>
-        <div class="meta-item"><div class="key">Phone</div><div class="val"><a href="tel:${o.phone}" style="color:var(--orange)">${o.phone}</a></div></div>
-        <div class="meta-item"><div class="key">Address</div><div class="val">${o.address}</div></div>
-        ${o.landmark?`<div class="meta-item"><div class="key">Landmark</div><div class="val">${o.landmark}</div></div>`:''}
-        ${o.option?`<div class="meta-item"><div class="key">Option</div><div class="val">${o.option==='under100'?'Under R100 — pay at door':'Over R100 — collect cash first'}</div></div>`:''}
-        ${o.payment?`<div class="meta-item"><div class="key">Payment</div><div class="val">${o.payment}</div></div>`:''}
-        ${o.location?`<div class="meta-item"><div class="key">GPS</div><div class="val"><a href="https://maps.google.com/?q=${o.location.lat},${o.location.lng}" target="_blank" style="color:var(--orange)">Open Map 📍</a></div></div>`:''}
-        ${o.deliveryFee?`<div class="meta-item"><div class="key">Delivery Fee</div><div class="val" style="color:var(--orange-dark);font-weight:700">${o.deliveryFee}</div></div>`:''}
-        ${o.extensionNote?`<div class="meta-item" style="grid-column:1/-1;background:var(--yellow-light)"><div class="key">⏱️ Extended</div><div class="val">${o.extensionNote}</div></div>`:''}
-        ${o.notes?`<div class="meta-item" style="grid-column:1/-1"><div class="key">Notes</div><div class="val">${o.notes}</div></div>`:''}
+const SC={spar:'#E31837',jumbo:'#B8860B',spaza:'#1D7A4C',task:'#C95420'};
+const SB={spar:'#FDE8E8',jumbo:'#FEF9E5',spaza:'#D4F0E3',task:'#FDE8D8'};
+const STAG={pending:'tp',accepted:'ta',rejected:'tj','on-the-way':'tow',delivered:'td',cancelled:'tc'};
+const SLBL={pending:'⏳ Pending',accepted:'✅ Accepted',rejected:'❌ Rejected','on-the-way':'🛵 On the Way',delivered:'🎉 Delivered',cancelled:'🚫 Cancelled'};
+
+function tAgo(ts){const d=Math.floor((Date.now()-ts)/1000);if(d<60)return d+'s ago';if(d<3600)return Math.floor(d/60)+'m ago';return Math.floor(d/3600)+'h ago'}
+
+function orderCard(o){
+  const sk=o.type==='task'?'task':(o.store||'spar');
+  const items=o.items||[];
+  const itemsHtml=o.type==='task'
+    ?`<div style="margin-bottom:10px"><div class="slbl">Task</div><p style="font-size:13px;line-height:1.6">${o.description||''}</p>${o.taskLocation?`<p style="font-size:12px;color:var(--mu);margin-top:4px">📍 ${o.taskLocation}</p>`:''} ${o.offeredPrice?`<p style="font-size:13px;font-weight:600;margin-top:4px">💰 ${o.offeredPrice}</p>`:''}</div>`
+    :items.length?`<div class="itmlist"><div class="slbl">Shopping List</div>${items.map(i=>`<div class="itrow"><span>${i.n||i.name}</span><span style="color:var(--mu)">~R${parseFloat(i.p||i.price||0).toFixed(2)}</span></div>`).join('')}</div>`:'' ;
+
+  // Total card
+  let totalHtml='';
+  if(o.type==='shopping'&&o.grandTotal){
+    totalHtml=`<div class="atotal">
+      <div class="atr"><span>Items est.</span><span>R${(o.itemsTotal||0).toFixed(2)}</span></div>
+      <div class="atr"><span>Delivery fee</span><span>${o.deliveryFee||'R0'}</span></div>
+      <div class="atr ag"><span>TOTAL</span><span>R${(o.grandTotal||0).toFixed(2)}</span></div>
+    </div>`;
+  }
+
+  const expMs=o.expiresAt||(o.createdAt+(dSettings.expireMinutes||60)*60*1000);
+  const left=Math.max(0,Math.floor((expMs-Date.now())/1000));
+  const m=Math.floor(left/60),s=left%60;
+  const expBar=o.status==='pending'?`<div class="expbar ${left<600?'urg':''}" id="eb-${o.id}"><span>⏰</span><span style="font-size:12px;color:var(--mu)">Expires in</span><span class="etm" id="et-${o.id}">${m}m ${s}s</span></div>`:'';
+
+  const acts=o.status==='pending'
+    ?`<button class="btn bg bsm" onclick="acceptOrd('${o.id}')">✓ Accept</button><button class="btn brd bsm" onclick="openRej('${o.id}')">✕ Reject</button>`
+    :o.status==='accepted'
+    ?`<button class="btn bp bsm" onclick="markOnWay('${o.id}')">🛵 On the Way</button><button class="btn bo bsm" onclick="shareDriverLoc('${o.id}')">📍 Share My Location</button><button class="btn bo bsm" onclick="openExt('${o.id}')">⏱️ Extend</button><button class="btn brd bsm" onclick="openRej('${o.id}')">Cancel</button>`
+    :o.status==='on-the-way'
+    ?`<button class="btn bg bsm" onclick="markDel('${o.id}')">✅ Mark Delivered</button><button class="btn bo bsm" onclick="shareDriverLoc('${o.id}')">📍 Update Location</button><button class="btn bo bsm" onclick="openExt('${o.id}')">⏱️ Extend</button>`
+    :`<span style="font-size:12px;color:var(--mu)">${o.rejectionReason||''}</span>`;
+
+  // Chat panel (for accepted/on-the-way)
+  let chatHtml='';
+  if(o.status==='accepted'||o.status==='on-the-way'){
+    chatHtml=`<div class="chatpanel">
+      <div class="cphd">💬 Chat with Customer</div>
+      <div class="cpmsgs" id="cpm-${o.id}"><div style="text-align:center;font-size:12px;color:var(--mu);padding:16px">Loading...</div></div>
+      <div class="cpinp">
+        <input type="text" placeholder="Type a message..." id="cpi-${o.id}" onkeydown="if(event.key==='Enter')adminSendChat('${o.id}')">
+        <div class="cpimg" onclick="adminSendImg('${o.id}')">📷</div>
+        <div class="cpsnd" onclick="adminSendChat('${o.id}')">➤</div>
       </div>
-      ${itemsHtml}
+    </div>`;
+    // Watch chat for this order
+    watchChatForOrder(o.id);
+  }
+
+  return `<div class="ocard ${o.status==='pending'?'npulse':''}" id="oc-${o.id}">
+    <div class="ohd">
+      <div class="sdot ${o.status}"></div>
+      <span class="oid">${o.id}</span>
+      <span class="sbadge" style="background:${SB[sk]};color:${SC[sk]}">${o.type==='task'?'⚡ Task':o.storeName||o.store}</span>
+      <span class="tag ${STAG[o.status]||'tp'}">${SLBL[o.status]||'Pending'}</span>
+      <span class="otm">${tAgo(o.createdAt)}</span>
     </div>
-    ${expiryBar}
-    <div class="order-actions">${actions}</div>
+    <div class="obdy">
+      <div class="ometa">
+        <div class="mitem"><div class="mk">Customer</div><div class="mv">${o.name}</div></div>
+        <div class="mitem"><div class="mk">Phone</div><div class="mv"><a href="tel:${o.phone}" style="color:var(--or)">${o.phone}</a></div></div>
+        <div class="mitem"><div class="mk">Address</div><div class="mv">${o.address}</div></div>
+        ${o.landmark?`<div class="mitem"><div class="mk">Landmark</div><div class="mv">${o.landmark}</div></div>`:''}
+        ${o.option?`<div class="mitem"><div class="mk">Option</div><div class="mv">${o.option==='under100'?'Under R100 — pay at door':'Over R100 — collect cash first'}</div></div>`:''}
+        ${o.payment?`<div class="mitem"><div class="mk">Payment</div><div class="mv">${o.payment}</div></div>`:''}
+        ${o.location?`<div class="mitem"><div class="mk">Customer GPS</div><div class="mv"><a href="https://maps.google.com/?q=${o.location.lat},${o.location.lng}" target="_blank" style="color:var(--or)">Open Map 📍</a></div></div>`:''}
+        ${o.notes?`<div class="mitem" style="grid-column:1/-1"><div class="mk">Notes</div><div class="mv">${o.notes}</div></div>`:''}
+        ${o.extensionNote?`<div class="mitem" style="grid-column:1/-1;background:var(--yel)"><div class="mk">⏱️ Extended</div><div class="mv">${o.extensionNote}</div></div>`:''}
+      </div>
+      ${itemsHtml}${totalHtml}
+    </div>
+    ${expBar}
+    <div class="oacts">${acts}</div>
+    ${chatHtml}
   </div>`;
 }
 
-function updateOrder(id, data) {
-  waitForFb(() => window._update(window._ref(window._db, 'orders/' + id), data));
+function watchChatForOrder(ordId){
+  if(chatWatchers[ordId])return;
+  waitFb(()=>{
+    chatWatchers[ordId]=window._onValue(window._ref(window._db,'chats/'+ordId),snap=>{
+      const el=document.getElementById('cpm-'+ordId);
+      if(!el)return;
+      const msgs=snap.val()||{};
+      const list=Object.values(msgs).sort((a,b)=>a.ts-b.ts);
+      el.innerHTML=list.length?list.map(m=>{
+        const isCustomer=m.role==='customer';
+        const time=new Date(m.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+        const imgHtml=m.img?`<img src="${m.img}" onclick="document.getElementById('ivimg').src='${m.img}';document.getElementById('ivwr').style.display='flex'" alt="photo">`:'' ;
+        return `<div class="msg ${isCustomer?'them':'me'}">${m.text||''}${imgHtml}<span class="mt">${isCustomer?'Customer':'You'} · ${time}</span></div>`;
+      }).join(''):'<div style="text-align:center;font-size:12px;color:var(--mu);padding:14px">No messages yet. Say hi!</div>';
+      el.scrollTop=el.scrollHeight;
+    });
+  });
 }
 
-function acceptOrder(id) { updateOrder(id, { status:'accepted', acceptedAt: Date.now() }); showNotif('✅ Accepted', `Order ${id} accepted`); }
-function markOnWay(id) { updateOrder(id, { status:'on-the-way' }); showNotif('🛵 On the Way', `Order ${id} is on the way`); }
-function markDelivered(id) { updateOrder(id, { status:'delivered', deliveredAt: Date.now() }); showNotif('🎉 Delivered!', `Order ${id} completed`); }
-
-function openReject(id) { rejectTargetId=id; document.getElementById('reject-modal').classList.add('open'); }
-function confirmReject() {
-  const reason = document.getElementById('reject-reason').value;
-  const note = document.getElementById('reject-note').value;
-  updateOrder(rejectTargetId, { status:'rejected', rejectionReason: reason+(note?': '+note:'') });
-  showNotif('❌ Rejected', `Order ${rejectTargetId} rejected`);
-  closeModal('reject-modal'); rejectTargetId=null;
+function adminSendChat(ordId){
+  const inp=document.getElementById('cpi-'+ordId);
+  const text=inp?inp.value.trim():'';
+  if(!text)return;
+  waitFb(()=>{window._push(window._ref(window._db,'chats/'+ordId),{role:'admin',text,ts:Date.now()});inp.value='';});
 }
 
-function openExtend(id) { extendTargetId=id; document.getElementById('extend-modal').classList.add('open'); }
-function confirmExtend() {
-  const mins = parseInt(document.getElementById('extend-minutes').value)||15;
-  const reason = document.getElementById('extend-reason').value;
-  const o = allOrders[extendTargetId];
-  if (!o) return;
-  const newExpiry = (o.expiresAt || Date.now()) + mins*60*1000;
-  updateOrder(extendTargetId, { expiresAt: newExpiry, extensionNote: `+${mins} min — ${reason}` });
-  showNotif(`⏱️ +${mins}min`, reason);
-  closeModal('extend-modal'); extendTargetId=null;
+function adminSendImg(ordId){
+  const fi=document.getElementById('admin-img-file');
+  fi.onchange=function(){
+    const file=this.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const b64=e.target.result;
+      waitFb(()=>window._push(window._ref(window._db,'chats/'+ordId),{role:'admin',img:b64,ts:Date.now()}));
+    };
+    reader.readAsDataURL(file);
+    this.value='';
+  };
+  fi.click();
 }
 
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function shareDriverLoc(ordId){
+  if(!navigator.geolocation){alert('Geolocation not supported on this device.');return}
+  navigator.geolocation.getCurrentPosition(pos=>{
+    waitFb(()=>window._update(window._ref(window._db,'orders/'+ordId),{driverLat:pos.coords.latitude.toFixed(5),driverLng:pos.coords.longitude.toFixed(5),locationUpdated:Date.now()}));
+    showNotif('📍 Location shared','Customer can now see your location.');
+  },()=>alert('Could not get your location. Enable location permissions.'));
+}
 
-function renderSettings() {
-  document.getElementById('view-settings').innerHTML = `
-    <div class="delivery-settings">
+function updOrd(id,data){waitFb(()=>window._update(window._ref(window._db,'orders/'+id),data))}
+function acceptOrd(id){updOrd(id,{status:'accepted',acceptedAt:Date.now()});showNotif('✅ Accepted',`Order ${id} accepted`)}
+function markOnWay(id){updOrd(id,{status:'on-the-way'});showNotif('🛵 On the Way',`Order ${id} is on the way`)}
+function markDel(id){updOrd(id,{status:'delivered',deliveredAt:Date.now()});showNotif('🎉 Delivered!',`Order ${id} completed`)}
+
+function openRej(id){rejId=id;openModal('rej-modal')}
+function confirmReject(){
+  const reason=document.getElementById('rej-reason').value;
+  const note=document.getElementById('rej-note').value;
+  updOrd(rejId,{status:'rejected',rejectionReason:reason+(note?': '+note:'')});
+  showNotif('❌ Rejected',`Order ${rejId} rejected`);
+  closeModal('rej-modal');rejId=null;
+}
+function openExt(id){extId=id;openModal('ext-modal')}
+function confirmExtend(){
+  const mins=parseInt(document.getElementById('ext-mins').value)||15;
+  const reason=document.getElementById('ext-reason').value;
+  const o=allOrds[extId];if(!o)return;
+  const newExp=(o.expiresAt||Date.now())+mins*60*1000;
+  updOrd(extId,{expiresAt:newExp,extensionNote:`+${mins} min — ${reason}`});
+  showNotif(`⏱️ +${mins}min`,reason);
+  closeModal('ext-modal');extId=null;
+}
+
+function openModal(id){
+  const el=document.getElementById(id);
+  el.style.opacity='1';el.style.pointerEvents='all';
+  const box=el.querySelector('[id$="-box"]');if(box)box.style.transform='scale(1)';
+}
+function closeModal(id){
+  const el=document.getElementById(id);
+  el.style.opacity='0';el.style.pointerEvents='none';
+  const box=el.querySelector('[id$="-box"]');if(box)box.style.transform='scale(.95)';
+}
+
+function renderSettings(){
+  document.getElementById('view-settings').innerHTML=`
+    <div class="sitecard">
+      <h3>🌐 Site Status Control</h3>
+      <p>Use the toggle in the top bar to open or close the customer site. When closed, customers see your notice message instead of the ordering page.</p>
+      <p style="margin-top:8px;font-size:12px;color:var(--or);font-weight:600">Current status: ${siteOpen?'🟢 OPEN':'🔴 CLOSED'}</p>
+    </div>
+    <div class="scard">
       <h3>⏱️ Delivery Time Estimates</h3>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Shown to customers on their order page.</p>
-      <div class="time-row"><label>Spar</label><input type="number" id="set-spar" value="${deliverySettings.spar}" min="5"> <span style="font-size:12px;color:var(--muted)">minutes</span></div>
-      <div class="time-row"><label>Jumbo</label><input type="number" id="set-jumbo" value="${deliverySettings.jumbo}" min="5"> <span style="font-size:12px;color:var(--muted)">minutes</span></div>
-      <div class="time-row"><label>Spaza / Local</label><input type="number" id="set-spaza" value="${deliverySettings.spaza}" min="5"> <span style="font-size:12px;color:var(--muted)">minutes</span></div>
+      <div class="trow2"><label>Spar</label><input type="number" id="s-spar" value="${dSettings.spar}" min="5"> <span style="font-size:12px;color:var(--mu)">minutes</span></div>
+      <div class="trow2"><label>Jumbo</label><input type="number" id="s-jumbo" value="${dSettings.jumbo}" min="5"> <span style="font-size:12px;color:var(--mu)">minutes</span></div>
+      <div class="trow2"><label>Spaza / Local</label><input type="number" id="s-spaza" value="${dSettings.spaza}" min="5"> <span style="font-size:12px;color:var(--mu)">minutes</span></div>
       <hr>
       <h3>⏳ Auto-Reject Timer</h3>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Orders not accepted in this time are auto-rejected.</p>
-      <div class="time-row"><label>Expires after</label><input type="number" id="set-expire" value="${deliverySettings.expireMinutes}" min="10"> <span style="font-size:12px;color:var(--muted)">minutes</span></div>
-      <br><button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+      <div class="trow2"><label>Expires after</label><input type="number" id="s-exp" value="${dSettings.expireMinutes}" min="10"> <span style="font-size:12px;color:var(--mu)">minutes</span></div>
+      <br><button class="btn bp" onclick="saveSettings()">Save Settings</button>
     </div>
-    <div class="delivery-settings">
+    <div class="scard">
       <h3>💰 Delivery Fees</h3>
-      <p style="font-size:13px;color:var(--muted)">Spar: <strong>R10</strong> &nbsp;·&nbsp; Jumbo: <strong>R20</strong> &nbsp;·&nbsp; Spaza: <strong>R10</strong></p>
+      <p style="font-size:13px;color:var(--mu)">Spar: <strong>R10</strong> &nbsp;·&nbsp; Jumbo: <strong>R20</strong> &nbsp;·&nbsp; Spaza: <strong>R10</strong></p>
     </div>
-    <div class="delivery-settings">
+    <div class="scard">
       <h3>🗑️ Clear Old Data</h3>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Remove all completed/rejected orders from Firebase.</p>
-      <button class="btn btn-outline" onclick="clearOldOrders()">Clear Completed Orders</button>
+      <p style="font-size:13px;color:var(--mu);margin-bottom:12px">Remove all rejected, cancelled & delivered orders from the database.</p>
+      <button class="btn bo" onclick="clearOld()">Clear Completed Orders</button>
     </div>
   `;
 }
 
-function saveSettings() {
-  deliverySettings = {
-    spar: parseInt(document.getElementById('set-spar').value)||30,
-    jumbo: parseInt(document.getElementById('set-jumbo').value)||60,
-    spaza: parseInt(document.getElementById('set-spaza').value)||20,
-    expireMinutes: parseInt(document.getElementById('set-expire').value)||60
-  };
-  localStorage.setItem('admin_settings', JSON.stringify(deliverySettings));
-  showNotif('✅ Saved', 'Settings updated');
+function saveSettings(){
+  dSettings={spar:parseInt(document.getElementById('s-spar').value)||30,jumbo:parseInt(document.getElementById('s-jumbo').value)||60,spaza:parseInt(document.getElementById('s-spaza').value)||20,expireMinutes:parseInt(document.getElementById('s-exp').value)||60};
+  localStorage.setItem('eb_settings',JSON.stringify(dSettings));
+  showNotif('✅ Saved','Settings updated');
 }
 
-function clearOldOrders() {
-  if (!confirm('Remove all rejected and delivered orders from the database?')) return;
-  waitForFb(() => {
-    Object.values(allOrders).forEach(o => {
-      if (o.status==='rejected'||o.status==='delivered') {
-        window._remove(window._ref(window._db, 'orders/'+o.id));
-      }
+function clearOld(){
+  if(!confirm('Remove all rejected, cancelled & delivered orders?'))return;
+  waitFb(()=>{
+    Object.values(allOrds).forEach(o=>{
+      if(['rejected','delivered','cancelled'].includes(o.status))window._remove(window._ref(window._db,'orders/'+o.id));
     });
-    showNotif('🗑️ Cleared', 'Old orders removed');
+    showNotif('🗑️ Cleared','Old orders removed');
   });
 }
 
-function showNotif(title, body) {
-  document.getElementById('notif-title').textContent = title;
-  document.getElementById('notif-body').textContent = body;
-  const n = document.getElementById('notif');
+function showNotif(title,body){
+  document.getElementById('notif-t').textContent=title;
+  document.getElementById('notif-b').textContent=body;
+  const n=document.getElementById('notif');
   n.classList.add('show');
-  setTimeout(() => n.classList.remove('show'), 4000);
+  setTimeout(()=>n.classList.remove('show'),4000);
+}
+
+function playBeep(){
+  try{const c=new(window.AudioContext||window.webkitAudioContext)();const o=c.createOscillator();const g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;g.gain.value=0.3;o.start();o.stop(c.currentTime+0.3);}catch(e){}
 }
 
 // Live countdown timers
-setInterval(() => {
-  Object.values(allOrders).filter(o=>o.status==='pending').forEach(o => {
-    const el = document.getElementById('t-'+o.id);
-    if (!el) return;
-    const expiryMs = o.expiresAt||(o.createdAt+deliverySettings.expireMinutes*60*1000);
-    const left = Math.max(0,Math.floor((expiryMs-Date.now())/1000));
+setInterval(()=>{
+  Object.values(allOrds).filter(o=>o.status==='pending').forEach(o=>{
+    const el=document.getElementById('et-'+o.id);if(!el)return;
+    const expMs=o.expiresAt||(o.createdAt+(dSettings.expireMinutes||60)*60*1000);
+    const left=Math.max(0,Math.floor((expMs-Date.now())/1000));
     const m=Math.floor(left/60),s=left%60;
     el.textContent=`${m}m ${s}s`;
     const bar=document.getElementById('eb-'+o.id);
-    if(bar) bar.classList.toggle('urgent',left<600);
+    if(bar)bar.classList.toggle('urg',left<600);
   });
-}, 1000);
+},1000);
 </script>
 </body>
 </html>
